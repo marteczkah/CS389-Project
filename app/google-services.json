@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "872377260411",
+    "firebase_url": "https://pace-marketplace.firebaseio.com",
+    "project_id": "pace-marketplace",
+    "storage_bucket": "pace-marketplace.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872377260411:android:821426ef4dd8fd1a5ac5de",
+        "android_client_info": {
+          "package_name": "com.example.pacemarketplace"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "872377260411-sa2j0ec2k85mounu7ndkp27lgjnqitut.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADVfGAK8XCdxIaxEZo-UrcvkBnOLqIyXw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "872377260411-sa2j0ec2k85mounu7ndkp27lgjnqitut.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
