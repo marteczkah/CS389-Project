@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Pace Marketplace</string>
+    <string name="accountp_add">Add a product</string>
+    <string name="accountp_yourp">Your products</string>
+    <string name="accountp_yourf">Your favorites</string>
+    <string name="accountp_seetings">Account settings</string>
 </resources>
