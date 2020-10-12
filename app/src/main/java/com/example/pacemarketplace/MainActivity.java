@@ -1,6 +1,7 @@
 package com.example.pacemarketplace;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -26,56 +27,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.account_page);
+//        setContentView(R.layout.account_page);
 
-        addProductPageButton = (Button) findViewById(R.id.addProductButton);
-        favoritesPageButton = (Button) findViewById(R.id.yourFavoritesButton);
-        accountSettingsButton = (Button) findViewById(R.id.settingsPageButton);
-        yourProductsPageButton = (Button) findViewById(R.id.yourProductsButton);
-
-        addProductPageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                openAddProductPage();
-            }
-        });
-
-        favoritesPageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                openFavoriteProductsPage();
-            }
-        });
-
-        accountSettingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                openAccountSettingsPage();
-            }
-        });
-
-        yourProductsPageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                openYourProductsPage();
-            }
-        });
-    }
-
-    public void openAddProductPage() {
-        setContentView(R.layout.add_product_page);
-    }
-
-    public void openFavoriteProductsPage() {
-        setContentView(R.layout.favorite_products_page);
-    }
-
-    public void openAccountSettingsPage() {
-        setContentView(R.layout.account_settings_page);
-    }
-
-    public void openYourProductsPage() {
-        setContentView(R.layout.your_products_page);
         setContentView(R.layout.activity_main);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         NavController navController = Navigation.findNavController(this,R.id.fragment);
@@ -84,15 +37,67 @@ public class MainActivity extends AppCompatActivity {
         // Need to change compile Options and upgrade to javaVersion of 1.8
         //To Customize name of these at the top go to my_nav.xml and change the andorid:label
         NavigationUI.setupWithNavController(bottomNavigationView,navController);
-    /*
-        Set<Integer> topLevelDestinations = new HashSet<>();
-        topLevelDestinations.add(R.id.search);
-        topLevelDestinations.add(R.id.messages);
-        topLevelDestinations.add(R.id.profile);
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(topLevelDestinations).build();
-        NavigationUI.setupActionBarWithNavController(this,navController,appBarConfiguration);
 
-    */
+        addProductPageButton = (Button) findViewById(R.id.addProductButton);
+        favoritesPageButton = (Button) findViewById(R.id.yourFavoritesButton);
+        accountSettingsButton = (Button) findViewById(R.id.settingsPageButton);
+        yourProductsPageButton = (Button) findViewById(R.id.yourProductsButton);
+
+        Profile profilePage = new Profile();
+        FragmentManager fm = getSupportFragmentManager();
+//
+//        addProductPageButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v){
+//                openAddProductPage();
+//            }
+//        });
+//
+//        favoritesPageButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v){
+//                openFavoriteProductsPage();
+//            }
+//        });
+//
+//        accountSettingsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v){
+//                openAccountSettingsPage();
+//            }
+//        });
+//
+//        yourProductsPageButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v){
+//                openYourProductsPage();
+//            }
+//        });
     }
+
+//    public void openAddProductPage() {
+//        setContentView(R.layout.add_product_page);
+//    }
+//
+//    public void openFavoriteProductsPage() {
+//        setContentView(R.layout.favorite_products_page);
+//    }
+//
+//    public void openAccountSettingsPage() {
+//        setContentView(R.layout.account_settings_page);
+//    }
+//
+//    public void openYourProductsPage() {
+//        setContentView(R.layout.your_products_page);
+//    /*
+//        Set<Integer> topLevelDestinations = new HashSet<>();
+//        topLevelDestinations.add(R.id.search);
+//        topLevelDestinations.add(R.id.messages);
+//        topLevelDestinations.add(R.id.profile);
+//        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(topLevelDestinations).build();
+//        NavigationUI.setupActionBarWithNavController(this,navController,appBarConfiguration);
+//
+//    */
+//    }
 
 }
