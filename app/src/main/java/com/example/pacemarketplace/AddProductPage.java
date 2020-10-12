@@ -23,6 +23,8 @@ public class AddProductPage extends Fragment {
 
     Button addProduct;
     EditText addName;
+    EditText addPrice;
+    EditText addDescription;
 
     FirebaseFirestore database = FirebaseFirestore.getInstance();
 
@@ -35,13 +37,21 @@ public class AddProductPage extends Fragment {
         View v = inflater.inflate(R.layout.add_product_page, container, false);
         addProduct = (Button) v.findViewById(R.id.addNameToDatabase);
         addName = (EditText) v.findViewById(R.id.ProductName);
+        addPrice = (EditText) v.findViewById(R.id.editTextTextMultiLine);
+        addDescription = (EditText) v.findViewById(R.id.editTextNumberDecimal);
 
         addProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String productName = addName.getText().toString();
+                String productPrice = addPrice.getText().toString();
+                String productDescription = addDescription.getText().toString();
+
                 Map<String,Object> data = new HashMap<>();
                 data.put("Product Name", productName);
+                data.put("Product Price", productPrice);
+                data.put("Product Description", productDescription);
+
                 database.collection("Products").document("Products Information").set(data)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
