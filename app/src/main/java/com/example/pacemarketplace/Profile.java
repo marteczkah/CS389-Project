@@ -1,12 +1,16 @@
 package com.example.pacemarketplace;
 
+import android.accounts.Account;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,7 +19,10 @@ import android.view.ViewGroup;
  */
 public class Profile extends Fragment {
 
-
+    private Button addProductPageButton;
+    private Button favoritesPageButton;
+    private Button accountSettingsButton;
+    private Button yourProductsPageButton;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,7 +67,68 @@ public class Profile extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.account_page, container, false);
+        addProductPageButton = (Button) rootView.findViewById(R.id.addProductButton);
+        favoritesPageButton = (Button) rootView.findViewById(R.id.yourFavoritesButton);
+        accountSettingsButton = (Button) rootView.findViewById(R.id.settingsPageButton);
+        yourProductsPageButton = (Button) rootView.findViewById(R.id.yourProductsButton);
+
+        addProductPageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openAddProductPage();
+            }
+        });
+
+        favoritesPageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFavoritesPage();
+            }
+        });
+
+        accountSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openAccountSettingPage();
+            }
+        });
+
+        yourProductsPageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openYourProductsPage();
+            }
+        });
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        return rootView;
+    }
+
+    public void openAddProductPage() {
+        AddProductPage s = new AddProductPage();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment, s);
+        transaction.commit();
+    }
+
+    public void openFavoritesPage() {
+        FavoriteProductsPage s = new FavoriteProductsPage();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment, s);
+        transaction.commit();
+    }
+
+    public void openAccountSettingPage() {
+        SettingsPage s = new SettingsPage();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment, s);
+        transaction.commit();
+    }
+
+    public void openYourProductsPage() {
+        UserProductsPage s = new UserProductsPage();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment, s);
+        transaction.commit();
     }
 }

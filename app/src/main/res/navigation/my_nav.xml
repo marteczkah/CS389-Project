@@ -9,7 +9,7 @@
         android:id="@+id/search"
         android:name="com.example.pacemarketplace.Search"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/search_page" />
     <fragment
         android:id="@+id/messages"
         android:name="com.example.pacemarketplace.Messages"
@@ -19,5 +19,5 @@
         android:id="@+id/profile"
         android:name="com.example.pacemarketplace.Profile"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/account_page" />
 </navigation>
