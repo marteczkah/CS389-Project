@@ -51,8 +51,9 @@ public class AddProductPage extends Fragment {
                 data.put("Product Name", productName);
                 data.put("Product Price", productPrice);
                 data.put("Product Description", productDescription);
+                String id = database.collection("Products").document().getId();
 
-                database.collection("Products").document("Products Information").set(data)
+                database.collection("Products").document(id).set(data)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
