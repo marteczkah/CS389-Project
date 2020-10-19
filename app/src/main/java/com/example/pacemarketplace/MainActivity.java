@@ -7,6 +7,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,10 +17,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
     private Button favoritesPageButton;
     private Button accountSettingsButton;
     private Button yourProductsPageButton;
+
+    DisplayProducts adapter;
+
+    FirebaseFirestore database = FirebaseFirestore.getInstance();
+    private CollectionReference noteRef = database.collection("Products");
 
 
     @Override
@@ -52,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
         Profile profilePage = new Profile();
         FragmentManager fm = getSupportFragmentManager();
 
+    }
 
 
-}}
+
+
+}

@@ -2,12 +2,27 @@ package com.example.pacemarketplace;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,6 +35,12 @@ public class Search extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    FirebaseFirestore database = FirebaseFirestore.getInstance();
+    private CollectionReference noteRef = database.collection("Products");
+
+    private DisplayProducts displayProducts;
+    public TextView productTitle;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -56,10 +77,52 @@ public class Search extends Fragment {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.search_page, container, false);
+        View rootView = inflater.inflate(R.layout.search_page, container, false);
+        Query query = database.collection("Products").orderBy("name", Query.Direction.DESCENDING);
+        FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>().setQuery(query,Product.class).build();
+        displayProducts = new DisplayProducts(options);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_search);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(displayProducts);
+
+//        productTitle = (TextView) rootView.findViewById(R.id.product_name);
+//        noteRef.get()
+//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                        if (documentSnapshot.exists()) {
+//                            String name = documentSnapshot.getString("name");
+//                            productTitle.setText(name);
+//                        } else {
+//                            Toast.makeText(getActivity().getBaseContext(), "No data", Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(getActivity().getBaseContext(), "No data", Toast.LENGTH_LONG).show();
+//                    }
+//                });
+        return rootView;
     }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        displayProducts.startListening();
+    }
+
+    public void onStop(){
+        super.onStop();
+        displayProducts.stopListening();
+    }
+
+
 }

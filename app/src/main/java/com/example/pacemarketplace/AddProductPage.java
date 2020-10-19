@@ -37,8 +37,8 @@ public class AddProductPage extends Fragment {
         View v = inflater.inflate(R.layout.add_product_page, container, false);
         addProduct = (Button) v.findViewById(R.id.addNameToDatabase);
         addName = (EditText) v.findViewById(R.id.ProductName);
-        addPrice = (EditText) v.findViewById(R.id.editTextTextMultiLine);
-        addDescription = (EditText) v.findViewById(R.id.editTextNumberDecimal);
+        addPrice = (EditText) v.findViewById(R.id.editTextNumberDecimal);
+        addDescription = (EditText) v.findViewById(R.id.editTextTextMultiLine);
 
         addProduct.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,9 +48,9 @@ public class AddProductPage extends Fragment {
                 String productDescription = addDescription.getText().toString();
 
                 Map<String,Object> data = new HashMap<>();
-                data.put("Product Name", productName);
-                data.put("Product Price", productPrice);
-                data.put("Product Description", productDescription);
+                data.put("name", productName);
+                data.put("price", productPrice);
+                data.put("description", productDescription);
                 String id = database.collection("Products").document().getId();
 
                 database.collection("Products").document(id).set(data)
