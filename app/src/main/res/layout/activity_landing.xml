@@ -145,7 +145,7 @@
         app:layout_constraintTop_toBottomOf="@+id/profileName"
          />
 
-    <ImageView>
+    <ImageView
         android:id="@+id/imageView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
