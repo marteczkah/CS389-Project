@@ -10,6 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name="com.example.pacemarketplace.RegistrationActivity"/>
+        <activity android:name="com.example.pacemarketplace.LoginActivity">
+        <activity android:name="com.example.pacemarketplace.LandingActivity">
         <activity android:name=".MainActivity"
             android:label="Pace Marketplace">
             <intent-filter>
