@@ -1,9 +1,12 @@
 package com.example.pacemarketplace;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +41,7 @@ public class Search extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     FirebaseFirestore database = FirebaseFirestore.getInstance();
     private CollectionReference noteRef = database.collection("Products");
+    FragmentManager transaction;
 
     private DisplayProducts displayProducts;
     public TextView productTitle;
@@ -83,33 +88,14 @@ public class Search extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.search_page, container, false);
+        Context context = getContext();
         Query query = database.collection("Products").orderBy("name", Query.Direction.DESCENDING);
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>().setQuery(query,Product.class).build();
-        displayProducts = new DisplayProducts(options);
+        transaction = getFragmentManager();
+        displayProducts = new DisplayProducts(options, context, transaction);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_search);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(displayProducts);
-
-//        productTitle = (TextView) rootView.findViewById(R.id.product_name);
-//        noteRef.get()
-//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                        if (documentSnapshot.exists()) {
-//                            String name = documentSnapshot.getString("name");
-//                            productTitle.setText(name);
-//                        } else {
-//                            Toast.makeText(getActivity().getBaseContext(), "No data", Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(getActivity().getBaseContext(), "No data", Toast.LENGTH_LONG).show();
-//                    }
-//                });
         return rootView;
     }
 
