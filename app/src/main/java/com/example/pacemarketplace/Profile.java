@@ -1,6 +1,8 @@
 package com.example.pacemarketplace;
 
 import android.accounts.Account;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,6 +24,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link Profile#newInstance} factory method to
@@ -33,6 +37,9 @@ public class Profile extends Fragment {
     private Button favoritesPageButton;
     private Button accountSettingsButton;
     private Button yourProductsPageButton;
+    private Button userLogOut;
+
+    Context mContext = getContext();
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -83,6 +90,7 @@ public class Profile extends Fragment {
         favoritesPageButton = (Button) rootView.findViewById(R.id.yourFavoritesButton);
         accountSettingsButton = (Button) rootView.findViewById(R.id.settingsPageButton);
         yourProductsPageButton = (Button) rootView.findViewById(R.id.yourProductsButton);
+        userLogOut = (Button) rootView.findViewById(R.id.logout);
 
 
         addProductPageButton.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +121,12 @@ public class Profile extends Fragment {
             }
         });
 
-
+        userLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
         // Inflate the layout for this fragment
         return rootView;
     }
@@ -150,4 +163,8 @@ public class Profile extends Fragment {
 //        FirebaseFirestore database = FirebaseFirestore.getInstance();
 //
 //    }
+    public void logout() {
+        FirebaseAuth.getInstance().signOut();//logout
+        startActivity(new Intent(mContext,LoginActivity.class));
+    }
 }
