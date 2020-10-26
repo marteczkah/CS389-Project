@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name="com.example.pacemarketplace.RegistrationActivity"/>
-        <activity android:name="com.example.pacemarketplace.LoginActivity">
+        <activity android:name="com.example.pacemarketplace.LoginActivity"/>
         <activity android:name=".MainActivity"
             android:label="Pace Marketplace">
             <intent-filter>
@@ -20,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.pacemarketplace.LandingActivity">
+        <activity android:name="com.example.pacemarketplace.LandingActivity"/>
     </application>
 
 </manifest>
