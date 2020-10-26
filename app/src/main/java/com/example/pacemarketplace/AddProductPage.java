@@ -48,9 +48,9 @@ public class AddProductPage extends Fragment {
                 String productDescription = addDescription.getText().toString();
 
                 Map<String,Object> data = new HashMap<>();
-                data.put("Product Name", productName);
-                data.put("Product Price", productPrice);
-                data.put("Product Description", productDescription);
+                data.put("name", productName);
+                data.put("price", productPrice);
+                data.put("description", productDescription);
                 String id = database.collection("Products").document().getId();
 
                 database.collection("Products").document(id).set(data)
