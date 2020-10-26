@@ -1,6 +1,8 @@
 package com.example.pacemarketplace;
 
 import android.accounts.Account;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +27,9 @@ public class Profile extends Fragment {
     private Button favoritesPageButton;
     private Button accountSettingsButton;
     private Button yourProductsPageButton;
+    private Button userLogOut;
+
+    Context mContext = getContext();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -72,6 +79,7 @@ public class Profile extends Fragment {
         favoritesPageButton = (Button) rootView.findViewById(R.id.yourFavoritesButton);
         accountSettingsButton = (Button) rootView.findViewById(R.id.settingsPageButton);
         yourProductsPageButton = (Button) rootView.findViewById(R.id.yourProductsButton);
+        userLogOut = (Button) rootView.findViewById(R.id.logout);
 
         addProductPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +106,13 @@ public class Profile extends Fragment {
             @Override
             public void onClick(View v) {
                 openYourProductsPage();
+            }
+        });
+
+        userLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
             }
         });
         // Inflate the layout for this fragment
@@ -130,5 +145,10 @@ public class Profile extends Fragment {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment, s);
         transaction.commit();
+    }
+
+    public void logout() {
+        FirebaseAuth.getInstance().signOut();//logout
+        startActivity(new Intent(mContext,LoginActivity.class));
     }
 }
