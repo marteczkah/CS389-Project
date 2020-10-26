@@ -9,7 +9,8 @@
         android:icon="@drawable/ic_baseline_search_24"
         android:contentDescription="search"
         app:showAsAction="ifRoom"
-        android:iconTint="#FFFFFF"/>
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        android:iconTint="#FFFFFF" />
 
     <item
         android:title="filters"

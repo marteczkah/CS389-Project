@@ -19,14 +19,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.core.Filter;
 
 import org.w3c.dom.Text;
 
 public class DisplayProducts extends FirestoreRecyclerAdapter<Product, DisplayProducts.ProductHolder> {
 
     private Context mContext;
-    private Dialog myDialog;
-    private Fragment fragment;
     private FragmentManager transaction;
 
     public DisplayProducts(FirestoreRecyclerOptions<Product> options, Context mContext, FragmentManager transaction) {
@@ -41,16 +40,9 @@ public class DisplayProducts extends FirestoreRecyclerAdapter<Product, DisplayPr
         productHolder.productDescription.setText(product.getProductDescription());
         productHolder.productPrice.setText(product.getProductPrice());
 
-        myDialog = new Dialog(mContext);
-        myDialog.setContentView(R.layout.product_details_page);
-        TextView dialog_product_name = (TextView) myDialog.findViewById(R.id.product_details_name);
-        dialog_product_name.setText(product.getProductName());
-
         productHolder.productCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(mContext, product.getProductName(), Toast.LENGTH_SHORT).show();
-//                myDialog.show();
                 String getName = product.getProductName();
                 String getDescription = product.getProductDescription();
                 String getPrice = product.getProductPrice();
@@ -83,17 +75,6 @@ public class DisplayProducts extends FirestoreRecyclerAdapter<Product, DisplayPr
             productPrice = (TextView) itemView.findViewById(R.id.product_price);
             productDescription = (TextView) itemView.findViewById(R.id.product_description);
             productCard = (RelativeLayout) itemView.findViewById(R.id.product_card);
-
-//            productCard.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-////                    productName.setText("Fuck this shit");
-//
-//                    Toast.makeText(mContext, "Succes", Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(mContext, ProductDetails.class);
-//                    intent.putExtra("name", product.getProductName());
-//                }
-//            });
         }
     }
 }
