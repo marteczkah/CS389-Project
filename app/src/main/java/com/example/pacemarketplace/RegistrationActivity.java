@@ -54,7 +54,7 @@ public class RegistrationActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
 
         if(fAuth.getCurrentUser() != null){
-            startActivity(new Intent(getApplicationContext(),LandingActivity.class));
+            startActivity(new Intent(getApplicationContext(),MainActivity.class));
             finish();
         }
 
