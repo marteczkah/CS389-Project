@@ -108,24 +108,29 @@ public class RegistrationActivity extends AppCompatActivity {
 
 //                            Toast.makeText(RegistrationActivity.this, "User Created.", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                            userID = fAuth.getCurrentUser().getUid();
-                            DocumentReference documentReference = fStore.collection("users").document(userID);
-                            Map<String,Object> user = new HashMap<>();
-                            user.put("fName",fName);
-                            user.put("email",RegisterEmail);
-                            user.put("lName",lName);
-                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d(TAG, "onSuccess: user Profile is created for "+ userID);
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG, "onFailure: " + e.toString());
-                                }
-                            });
-                        }else {
+//                            userID = fAuth.getCurrentUser().getUid();
+//                            String id = fStore.collection("Users").document().getId();
+//                            DocumentReference documentReference = fStore.collection("Users").document(id);
+//                            Map<String,Object> user = new HashMap<>();
+//                            user.put("fName",fName);
+//                            user.put("email",RegisterEmail);
+//                            user.put("lName",lName);
+//                            fStore.collection("Users").document(id).set(user)
+//                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                        @Override
+//                                        public void onSuccess(Void aVoid) {
+//                                            Toast.makeText(RegistrationActivity.this, "account added to database", Toast.LENGTH_SHORT).show();
+//                                            Log.d(TAG, "onSuccess: user Profile is created for "+ userID);
+//                                        }
+//                                    })
+//                                    .addOnFailureListener(new OnFailureListener() {
+//                                        @Override
+//                                        public void onFailure(@NonNull Exception e) {
+//                                            Toast.makeText(RegistrationActivity.this, "account not added to database", Toast.LENGTH_SHORT).show();
+//                                            Log.d(TAG, "onFailure: " + e.toString());
+//                                        }
+//                                    });
+                        } else {
                             Toast.makeText(RegistrationActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.GONE);
                         }

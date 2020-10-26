@@ -102,7 +102,7 @@ public class LandingActivity extends AppCompatActivity {
 
 
 
-        DocumentReference documentReference = fStore.collection("users").document(userId);
+        DocumentReference documentReference = fStore.collection("Users").document(userId);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
