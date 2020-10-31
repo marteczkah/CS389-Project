@@ -110,9 +110,9 @@ public class RegistrationActivity extends AppCompatActivity {
 
 //                            Toast.makeText(RegistrationActivity.this, "User Created.", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-//                            userID = fAuth.getCurrentUser().getUid();
-                            String id = fStore.collection("Users").document().getId();
-                            DocumentReference documentReference = fStore.collection("Users").document(id);
+                            userID = fAuth.getCurrentUser().getUid();
+//                            String id = fStore.collection("Users").document().getId();
+                            DocumentReference documentReference = fStore.collection("Users").document(userID);
                             Map<String,Object> user = new HashMap<>();
                             List<String> favorites = new ArrayList<>();
                             List<String> userProducts = new ArrayList<>();
@@ -121,7 +121,8 @@ public class RegistrationActivity extends AppCompatActivity {
                             user.put("lName", lastName);
                             user.put("favorites", favorites);
                             user.put("userProducts", userProducts);
-                            fStore.collection("Users").document(id).set(user)
+                            user.put("userID", userID);
+                            fStore.collection("Users").document(userID).set(user)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
