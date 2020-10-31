@@ -107,7 +107,7 @@ public Uri imguri;
 
                             }
                         });
-                Fileuploader();
+//                Fileuploader();
             }
         });
         return v;
