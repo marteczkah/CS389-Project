@@ -55,10 +55,11 @@ public class RegistrationActivity extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         progressBar = findViewById(R.id.progressBar);
 
-        if(fAuth.getCurrentUser() != null){
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            finish();
-        }
+//        if(fAuth.getCurrentUser() != null){
+//            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+////            finish();
+//            return;
+//        }
 
 
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -155,5 +156,18 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = fAuth.getCurrentUser();
+        updateUI(currentUser);
+    }
+
+    public void updateUI(FirebaseUser currentUser) {
+        if (currentUser != null){
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        }
     }
 }
