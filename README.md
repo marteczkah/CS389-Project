@@ -26,3 +26,7 @@ Pace Marketplace is an application designed to connect university students who a
 # [Specification Sheet](https://docs.google.com/document/d/1nm07MHDNRQW4PMBmhd-sWLvS8X6W7_uqqDDsAwx-ykQ/edit)
 
 # Software #
+* Slack 
+* Google Docs, Sheets
+* Firebase
+* Android Studio 
