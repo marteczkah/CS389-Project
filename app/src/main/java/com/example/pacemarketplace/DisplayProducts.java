@@ -46,7 +46,10 @@ public class DisplayProducts extends FirestoreRecyclerAdapter<Product, DisplayPr
                 String getName = product.getProductName();
                 String getDescription = product.getProductDescription();
                 String getPrice = product.getProductPrice();
-                ProductDetails pd = new ProductDetails(getName, getDescription, getPrice);
+                String getProductID = product.getProductID();
+                String getSellerID = product.getSellerID();
+
+                ProductDetails pd = new ProductDetails(getName, getDescription, getPrice, getProductID, getSellerID);
                 FragmentTransaction fragmentTransaction = transaction.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment, pd);
                 fragmentTransaction.commit();

@@ -65,4 +65,11 @@
         android:text="Message Seller"
         android:layout_gravity="center"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Favorite Product"
+        android:layout_gravity="center"
+        android:id="@+id/add_favorite"/>
+
 </LinearLayout>

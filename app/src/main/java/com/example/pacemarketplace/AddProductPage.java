@@ -24,6 +24,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -85,18 +87,20 @@ public Uri imguri;
                 String productPrice = addPrice.getText().toString();
                 String productDescription = addDescription.getText().toString();
 
-                String userID = fAuth.getCurrentUser().getUid();
+                final String userID = fAuth.getCurrentUser().getUid();
+                final String id = database.collection("Products").document().getId();
                 Map<String,Object> data = new HashMap<>();
                 data.put("name", productName);
                 data.put("price", productPrice);
                 data.put("description", productDescription);
                 data.put("sellerID", userID);
-                String id = database.collection("Products").document().getId();
-
+                data.put("productID", id);
                 database.collection("Products").document(id).set(data)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
+                                DocumentReference docRef = database.collection("Users").document(userID);
+                                docRef.update("userProducts", FieldValue.arrayUnion(id));
                                 Toast.makeText(getActivity().getBaseContext(), "Success", Toast.LENGTH_LONG).show();
                             }
                         })
