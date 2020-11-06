@@ -1,13 +1,37 @@
 package com.example.pacemarketplace;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FavoriteProductsPage extends Fragment {
+
+    FirebaseFirestore database = FirebaseFirestore.getInstance();
+    FirebaseAuth fAuth;
+    RecyclerViewAdapter recyclerViewAdapter;
+    RecyclerView rv;
 
     public FavoriteProductsPage() {
         //required empty constructor
@@ -15,7 +39,44 @@ public class FavoriteProductsPage extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.favorite_products_page, container, false);
+        final View v = inflater.inflate(R.layout.favorite_products_page, container, false);
+        final ArrayList<Product> favoriteProducts = new ArrayList<>();
+        final Context context = getContext();
+        fAuth = FirebaseAuth.getInstance();
+        String userID = fAuth.getCurrentUser().getUid();
+        rv = v.findViewById(R.id.recycler_view_favorite);
+        final DocumentReference docRef = database.collection("Users").document(userID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                List<String> favoritesID = (List<String>) document.get("favorites");
+                int count = 0;
+                for (String id : favoritesID) {
+                    final int countValue = count;
+                    database.collection("Products").document(id).get()
+                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    DocumentSnapshot document = task.getResult();
+                                    String productName = document.get("name").toString();
+                                    String productDescription = document.get("description").toString();
+                                    String price = document.get("price").toString();
+                                    String productID = document.get("productID").toString();
+                                    String sellerID = document.get("sellerID").toString();
+                                    Product product = new Product(productName, price, productDescription, productID, sellerID);
+                                    favoriteProducts.add(countValue, product);
+                                    recyclerViewAdapter = new RecyclerViewAdapter(favoriteProducts, context);
+                                    rv.setAdapter(recyclerViewAdapter);
+                                }
+                            });
+                    count++;
+                }
+            }
+        });
+        recyclerViewAdapter = new RecyclerViewAdapter(favoriteProducts, context);
+        rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rv.setAdapter(recyclerViewAdapter);
         return v;
     }
 }
