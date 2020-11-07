@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,6 +33,7 @@ public class FavoriteProductsPage extends Fragment {
     FirebaseAuth fAuth;
     RecyclerViewAdapter recyclerViewAdapter;
     RecyclerView rv;
+    FragmentManager transaction;
 
     public FavoriteProductsPage() {
         //required empty constructor
@@ -46,6 +48,7 @@ public class FavoriteProductsPage extends Fragment {
         String userID = fAuth.getCurrentUser().getUid();
         rv = v.findViewById(R.id.recycler_view_favorite);
         final DocumentReference docRef = database.collection("Users").document(userID);
+        transaction = getFragmentManager();
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -66,7 +69,7 @@ public class FavoriteProductsPage extends Fragment {
                                     String sellerID = document.get("sellerID").toString();
                                     Product product = new Product(productName, price, productDescription, productID, sellerID);
                                     favoriteProducts.add(countValue, product);
-                                    recyclerViewAdapter = new RecyclerViewAdapter(favoriteProducts, context);
+                                    recyclerViewAdapter = new RecyclerViewAdapter(favoriteProducts, context, transaction);
                                     rv.setAdapter(recyclerViewAdapter);
                                 }
                             });
@@ -74,7 +77,7 @@ public class FavoriteProductsPage extends Fragment {
                 }
             }
         });
-        recyclerViewAdapter = new RecyclerViewAdapter(favoriteProducts, context);
+        recyclerViewAdapter = new RecyclerViewAdapter(favoriteProducts, context, transaction);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv.setAdapter(recyclerViewAdapter);
         return v;

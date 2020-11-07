@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,6 +28,7 @@ public class UserProductsPage extends Fragment {
     FirebaseAuth fAuth;
     RecyclerViewAdapter recyclerViewAdapter;
     RecyclerView rv;
+    FragmentManager transaction;
 
     public UserProductsPage() {
         //required empty constructor
@@ -41,6 +43,7 @@ public class UserProductsPage extends Fragment {
         String userID = fAuth.getCurrentUser().getUid();
         rv = v.findViewById(R.id.recycler_view_userproducts);
         final DocumentReference docRef = database.collection("Users").document(userID);
+        transaction = getFragmentManager();
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -61,7 +64,7 @@ public class UserProductsPage extends Fragment {
                                     String sellerID = document.get("sellerID").toString();
                                     Product product = new Product(productName, price, productDescription, productID, sellerID);
                                     userProducts.add(countValue, product);
-                                    recyclerViewAdapter = new RecyclerViewAdapter(userProducts, context);
+                                    recyclerViewAdapter = new RecyclerViewAdapter(userProducts, context, transaction);
                                     rv.setAdapter(recyclerViewAdapter);
                                 }
                             });
@@ -69,7 +72,7 @@ public class UserProductsPage extends Fragment {
                 }
             }
         });
-        recyclerViewAdapter = new RecyclerViewAdapter(userProducts, context);
+        recyclerViewAdapter = new RecyclerViewAdapter(userProducts, context, transaction);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv.setAdapter(recyclerViewAdapter);
         return v;

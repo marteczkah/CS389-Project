@@ -21,13 +21,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +49,8 @@ public class Search extends Fragment {
     FirebaseFirestore database = FirebaseFirestore.getInstance();
     private CollectionReference noteRef = database.collection("Products");
     FragmentManager transaction;
+    RecyclerViewAdapter recyclerViewAdapter;
+    RecyclerView rv;
 
     private DisplayProducts displayProducts;
     public TextView productTitle;
@@ -89,25 +97,39 @@ public class Search extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.search_page, container, false);
-        Context context = getContext();
-        Query query = database.collection("Products").orderBy("name", Query.Direction.DESCENDING);
-        FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>().setQuery(query,Product.class).build();
+        final Context context = getContext();
+        final ArrayList<Product> allProducts = new ArrayList<>();
         transaction = getFragmentManager();
-        displayProducts = new DisplayProducts(options, context, transaction);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_search);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(displayProducts);
+//        Query query = database.collection("Products").orderBy("name", Query.Direction.DESCENDING);
+////        FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>().setQuery(query,Product.class).build();
+////        transaction = getFragmentManager();
+////        displayProducts = new DisplayProducts(options, context, transaction);
+////        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_search);
+////        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+////        recyclerView.setAdapter(displayProducts);
+        database.collection("Products").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                QuerySnapshot documents = task.getResult();
+                List<DocumentSnapshot> readDocuments = documents.getDocuments();
+                for (int i = 0; i < readDocuments.size(); i++) {
+                    DocumentSnapshot document = readDocuments.get(i);
+                    String productName = document.get("name").toString();
+                    String productDescription = document.get("description").toString();
+                    String price = document.get("price").toString();
+                    String productID = document.get("productID").toString();
+                    String sellerID = document.get("sellerID").toString();
+                    Product product = new Product(productName, price, productDescription, productID, sellerID);
+                    allProducts.add(product);
+                    recyclerViewAdapter = new RecyclerViewAdapter(allProducts, context, transaction);
+                    rv.setAdapter(recyclerViewAdapter);
+                }
+            }
+        });
+        rv = rootView.findViewById(R.id.recycler_view_search);
+        recyclerViewAdapter = new RecyclerViewAdapter(allProducts, context, transaction);
+        rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rv.setAdapter(recyclerViewAdapter);
         return rootView;
-    }
-
-    @Override
-    public void onStart(){
-        super.onStart();
-        displayProducts.startListening();
-    }
-
-    public void onStop(){
-        super.onStop();
-        displayProducts.stopListening();
     }
 }
