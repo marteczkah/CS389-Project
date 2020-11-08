@@ -49,7 +49,6 @@ public class ProductDetails extends Fragment {
     FirebaseAuth fAuth;
     ImageView product_image;
 
-    FirebaseFirestore database = FirebaseFirestore.getInstance();
     public ProductDetails() {
     //required empty constructor
     }

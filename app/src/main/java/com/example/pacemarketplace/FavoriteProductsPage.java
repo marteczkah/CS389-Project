@@ -67,7 +67,8 @@ public class FavoriteProductsPage extends Fragment {
                                     String price = document.get("price").toString();
                                     String productID = document.get("productID").toString();
                                     String sellerID = document.get("sellerID").toString();
-                                    Product product = new Product(productName, price, productDescription, productID, sellerID);
+                                    String imgUri = document.get("ImgURI").toString();
+                                    Product product = new Product(productName, price, productDescription, productID, sellerID, imgUri);
                                     favoriteProducts.add(countValue, product);
                                     recyclerViewAdapter = new RecyclerViewAdapter(favoriteProducts, context, transaction);
                                     rv.setAdapter(recyclerViewAdapter);

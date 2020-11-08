@@ -62,7 +62,8 @@ public class UserProductsPage extends Fragment {
                                     String price = document.get("price").toString();
                                     String productID = document.get("productID").toString();
                                     String sellerID = document.get("sellerID").toString();
-                                    Product product = new Product(productName, price, productDescription, productID, sellerID);
+                                    String imgUri = document.get("ImgURI").toString();
+                                    Product product = new Product(productName, price, productDescription, productID, sellerID, imgUri);
                                     userProducts.add(countValue, product);
                                     recyclerViewAdapter = new RecyclerViewAdapter(userProducts, context, transaction);
                                     rv.setAdapter(recyclerViewAdapter);

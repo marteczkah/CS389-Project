@@ -92,7 +92,6 @@ public class AddProductPage extends Fragment {
                 data.put("price", productPrice);
                 data.put("description", productDescription);
                 data.put("ImgURI",fileURI);
-                String id = database.collection("Products").document().getId();
 
                 data.put("sellerID", userID);
                 data.put("productID", id);
