@@ -13,9 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toolbar;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -36,9 +39,6 @@ public class MainActivity extends AppCompatActivity {
     private Button favoritesPageButton;
     private Button accountSettingsButton;
     private Button yourProductsPageButton;
-
-    DisplayProducts adapter;
-
     FirebaseFirestore database = FirebaseFirestore.getInstance();
     private CollectionReference noteRef = database.collection("Products");
 
@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         //Nav Bar for main activity
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -61,10 +60,5 @@ public class MainActivity extends AppCompatActivity {
 
         Profile profilePage = new Profile();
         FragmentManager fm = getSupportFragmentManager();
-
     }
-
-
-
-
 }

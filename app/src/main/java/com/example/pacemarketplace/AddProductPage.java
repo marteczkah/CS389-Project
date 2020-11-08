@@ -16,10 +16,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -33,6 +37,7 @@ import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class AddProductPage extends Fragment {
 
+    FirebaseAuth fAuth;
     Button addProduct;
     EditText addName;
     EditText addPrice;
@@ -49,12 +54,14 @@ public class AddProductPage extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.add_product_page, container, false);
         addProduct = (Button) v.findViewById(R.id.addNameToDatabase);
         addName = (EditText) v.findViewById(R.id.ProductName);
         addPrice = (EditText) v.findViewById(R.id.editTextNumberDecimal);
         addDescription = (EditText) v.findViewById(R.id.editTextTextMultiLine);
+
+        fAuth = FirebaseAuth.getInstance();
 
         //Adding Image Stuff
         ch=(Button)v.findViewById(R.id.btnchoose);
@@ -77,6 +84,9 @@ public class AddProductPage extends Fragment {
                 String productDescription = addDescription.getText().toString();
                 String fileURI = Fileuploader();
 
+
+                final String userID = fAuth.getCurrentUser().getUid();
+                final String id = database.collection("Products").document().getId();
                 Map<String,Object> data = new HashMap<>();
                 data.put("name", productName);
                 data.put("price", productPrice);
@@ -84,10 +94,14 @@ public class AddProductPage extends Fragment {
                 data.put("ImgURI",fileURI);
                 String id = database.collection("Products").document().getId();
 
+                data.put("sellerID", userID);
+                data.put("productID", id);
                 database.collection("Products").document(id).set(data)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
+                                DocumentReference docRef = database.collection("Users").document(userID);
+                                docRef.update("userProducts", FieldValue.arrayUnion(id));
                                 Toast.makeText(getActivity().getBaseContext(), "Success", Toast.LENGTH_LONG).show();
                             }
                         })
@@ -98,7 +112,7 @@ public class AddProductPage extends Fragment {
 
                             }
                         });
-
+//                Fileuploader();
             }
         });
         return v;

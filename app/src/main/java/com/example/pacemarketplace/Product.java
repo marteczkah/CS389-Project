@@ -7,16 +7,20 @@ public class Product {
     public String price;
     public String description;
     public String ImgURI;
+    public String productID;
+    public String sellerID;
 
     public Product(){
         //empty constructor needed
     }
 
-    public Product(String name, String price, String description, String imgURI) {
+    public Product(String name, String price, String description, String productID, String sellerID, String ImgURI) {
         this.name = name;
         this.price = price;
         this.description = description;
-        this.ImgURI = imgURI;
+        this.productID = productID;
+        this.sellerID = sellerID;
+        this.ImgURI = ImgURI;
     }
 
     @PropertyName("name")
@@ -49,5 +53,23 @@ public class Product {
 
     public void setDescription(String description){
         this.description = description;
+    }
+
+    @PropertyName("productID")
+    public String getProductID() {
+        return productID;
+    }
+
+    public void setProductID(String productID) {
+        this.productID = productID;
+    }
+
+    @PropertyName("sellerID")
+    public String getSellerID() {
+        return sellerID;
+    }
+
+    public void setSellerID(String sellerID) {
+        this.sellerID = sellerID;
     }
 }

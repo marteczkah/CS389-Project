@@ -38,6 +38,7 @@ public class Profile extends Fragment {
     private Button accountSettingsButton;
     private Button yourProductsPageButton;
     private Button userLogOut;
+    FirebaseAuth fAuth;
 
     Context mContext = getContext();
 
@@ -91,6 +92,7 @@ public class Profile extends Fragment {
         accountSettingsButton = (Button) rootView.findViewById(R.id.settingsPageButton);
         yourProductsPageButton = (Button) rootView.findViewById(R.id.yourProductsButton);
         userLogOut = (Button) rootView.findViewById(R.id.logout);
+        fAuth = FirebaseAuth.getInstance();
 
 
         addProductPageButton.setOnClickListener(new View.OnClickListener() {
