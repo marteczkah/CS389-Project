@@ -57,13 +57,12 @@ public class ProductDetails extends Fragment {
         product_name.setText(name);
         product_description.setText(description);
         product_price.setText("$"+price);
+        fAuth = FirebaseAuth.getInstance();
+        final String userID = fAuth.getCurrentUser().getUid();
         addFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fAuth = FirebaseAuth.getInstance();
-                String userID = fAuth.getCurrentUser().getUid();
                 final DocumentReference docRef = database.collection("Users").document(userID);
-//                docRef.update("favorites", FieldValue.arrayUnion(productID));
                 docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -71,13 +70,26 @@ public class ProductDetails extends Fragment {
                         List<String> favoritesList = (List<String>) document.get("favorites");
                         if (favoritesList.contains(productID)) {
                             docRef.update("favorites", FieldValue.arrayRemove(productID));
+                            addFavorite.setText("Add to Favorites");
                         } else {
                             docRef.update("favorites", FieldValue.arrayUnion(productID));
+                            addFavorite.setText("Remove from Favorites");
                         }
                     }
                 });
             }
         });
+        database.collection("Users").document(userID).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
+                        List<String> favorites = (List<String>) document.get("favorites");
+                        if (favorites.contains(productID)) {
+                            addFavorite.setText("Remove from favorites");
+                        }
+                    }
+                });
         return v;
     }
 }
