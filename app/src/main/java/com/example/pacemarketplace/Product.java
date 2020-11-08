@@ -6,15 +6,17 @@ public class Product {
     public String name;
     public String price;
     public String description;
+    public String ImgURI;
 
     public Product(){
         //empty constructor needed
     }
 
-    public Product(String name, String price, String description) {
+    public Product(String name, String price, String description, String imgURI) {
         this.name = name;
         this.price = price;
         this.description = description;
+        this.ImgURI = imgURI;
     }
 
     @PropertyName("name")
@@ -39,6 +41,11 @@ public class Product {
     public String getProductDescription() {
         return  description;
     }
+
+    @PropertyName("ImgURI")
+    public String getImgURI(){return ImgURI;}
+
+
 
     public void setDescription(String description){
         this.description = description;

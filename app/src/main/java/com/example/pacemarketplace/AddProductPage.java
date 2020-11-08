@@ -2,9 +2,7 @@ package com.example.pacemarketplace;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,17 +15,16 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,8 +40,7 @@ public class AddProductPage extends Fragment {
     Button ch;
     ImageView img;
     StorageReference mStorageRef;
-
-public Uri imguri;
+    public Uri imguri;
 
     FirebaseFirestore database = FirebaseFirestore.getInstance();
 
@@ -79,12 +75,13 @@ public Uri imguri;
                 String productName = addName.getText().toString();
                 String productPrice = addPrice.getText().toString();
                 String productDescription = addDescription.getText().toString();
-
+                String fileURI = Fileuploader();
 
                 Map<String,Object> data = new HashMap<>();
                 data.put("name", productName);
                 data.put("price", productPrice);
                 data.put("description", productDescription);
+                data.put("ImgURI",fileURI);
                 String id = database.collection("Products").document().getId();
 
                 database.collection("Products").document(id).set(data)
@@ -101,7 +98,7 @@ public Uri imguri;
 
                             }
                         });
-                Fileuploader();
+
             }
         });
         return v;
@@ -115,16 +112,16 @@ public Uri imguri;
 
     }
 
-    private void Fileuploader()
+    private String Fileuploader()
     {
         StorageReference Ref = mStorageRef.child(System.currentTimeMillis() + "."+getExtension(imguri));
-
         Ref.putFile(imguri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // Get a URL to the uploaded content
-                        //Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        String downloadUrl = taskSnapshot.getStorage().getDownloadUrl().toString();
+
                         Toast.makeText(getActivity().getBaseContext(), "Image Uploaded successfully",Toast.LENGTH_LONG).show();
                     }
                 })
@@ -135,6 +132,8 @@ public Uri imguri;
                         // ...
                     }
                 });
+        return "gs://" + Ref.getBucket() + Ref.getPath();
+
     }
 
     private void Filechooser()
