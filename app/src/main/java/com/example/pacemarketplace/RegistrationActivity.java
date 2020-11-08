@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class RegistrationActivity extends AppCompatActivity {
     public static final String TAG = "TAG";
-    EditText fName, lName,RegisterEmail,RegisterPassword;
+    EditText fName, lName,RegisterEmail,RegisterPassword, RegisterPassword2;
     Button registerButton;
     TextView loginButton;
     FirebaseAuth fAuth;
@@ -48,6 +48,7 @@ public class RegistrationActivity extends AppCompatActivity {
         lName = findViewById(R.id.lastName);
         RegisterEmail      = findViewById(R.id.Email);
         RegisterPassword   = findViewById(R.id.password);
+        RegisterPassword2 = findViewById(R.id.confirmPassword);
         registerButton = findViewById(R.id.NewMemberButton);
         loginButton   = findViewById(R.id.createText);
 
@@ -66,6 +67,7 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String email = RegisterEmail.getText().toString().trim();
                 String password = RegisterPassword.getText().toString().trim();
+                String confirm = RegisterPassword2.getText().toString().trim();
                 final String firstName = fName.getText().toString();
                 final String lastName    = lName.getText().toString();
 
@@ -82,6 +84,10 @@ public class RegistrationActivity extends AppCompatActivity {
                 if(password.length() < 6){
                     RegisterPassword.setError("Password Must be >= 6 Characters");
                     return;
+                }
+                
+                if(!confirm.equals(password){
+                    RegisterPassword2.setError("Passwords do not match");
                 }
 
                 progressBar.setVisibility(View.VISIBLE);
