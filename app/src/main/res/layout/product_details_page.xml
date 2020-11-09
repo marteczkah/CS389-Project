@@ -24,7 +24,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="70"
+        android:layout_weight="80"
         android:id="@+id/product_details_image"
         android:scaleType="centerCrop"
         android:src="@mipmap/ic_launcher"

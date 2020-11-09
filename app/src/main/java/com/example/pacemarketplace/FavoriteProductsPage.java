@@ -54,9 +54,7 @@ public class FavoriteProductsPage extends Fragment {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot document = task.getResult();
                 List<String> favoritesID = (List<String>) document.get("favorites");
-                int count = 0;
                 for (String id : favoritesID) {
-                    final int countValue = count;
                     database.collection("Products").document(id).get()
                             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
@@ -69,12 +67,11 @@ public class FavoriteProductsPage extends Fragment {
                                     String sellerID = document.get("sellerID").toString();
                                     String imgUri = document.get("ImgURI").toString();
                                     Product product = new Product(productName, price, productDescription, productID, sellerID, imgUri);
-                                    favoriteProducts.add(countValue, product);
+                                    favoriteProducts.add(product);
                                     recyclerViewAdapter = new RecyclerViewAdapter(favoriteProducts, context, transaction);
                                     rv.setAdapter(recyclerViewAdapter);
                                 }
                             });
-                    count++;
                 }
             }
         });
