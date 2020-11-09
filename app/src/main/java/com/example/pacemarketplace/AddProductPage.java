@@ -92,6 +92,7 @@ public class AddProductPage extends Fragment {
                 data.put("price", productPrice);
                 data.put("description", productDescription);
                 data.put("ImgURI",fileURI);
+                data.put("flags", 0);
 
                 data.put("sellerID", userID);
                 data.put("productID", id);
