@@ -1,5 +1,6 @@
 package com.example.pacemarketplace;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -45,6 +46,8 @@ public class Search extends Fragment {
     FragmentManager transaction;
     RecyclerViewAdapter recyclerViewAdapter;
     RecyclerView rv;
+    Dialog filterDialog;
+    Button filters;
 
     public TextView productTitle;
 
@@ -70,6 +73,17 @@ public class Search extends Fragment {
         final ArrayList<Product> allProducts = new ArrayList<>();
         transaction = getFragmentManager();
         SearchView searchView = rootView.findViewById(R.id.search_menu);
+
+        filters = rootView.findViewById(R.id.filters_button);
+        filters.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterDialog = new Dialog(getContext());
+                filterDialog.setContentView(R.layout.filters_dialog);
+                filterDialog.show();
+            }
+        });
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -83,6 +97,7 @@ public class Search extends Fragment {
                 return false;
             }
         });
+
         database.collection("Products").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -103,10 +118,13 @@ public class Search extends Fragment {
                 }
             }
         });
+
         rv = rootView.findViewById(R.id.recycler_view_search);
         recyclerViewAdapter = new RecyclerViewAdapter(allProducts, context, transaction);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv.setAdapter(recyclerViewAdapter);
         return rootView;
     }
+
+
 }
