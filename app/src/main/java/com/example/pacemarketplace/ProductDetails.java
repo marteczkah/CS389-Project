@@ -3,15 +3,21 @@ package com.example.pacemarketplace;
 import java.io.InputStream;
 import java.net.URL;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.graphics.drawable.Drawable;
 import androidx.fragment.app.Fragment;
+
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -21,9 +27,13 @@ import com.squareup.picasso.Picasso;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
+
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ComputableLiveData;
+
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,17 +44,24 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+
 import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.prefs.Preferences;
+
+import static android.content.Context.MODE_PRIVATE;
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class ProductDetails extends Fragment {
 
     String name, description, price, productID, sellerID, imgUrl;
     TextView product_name, product_description, product_price;
     Button addFavorite;
+    ToggleButton flagProductToggle;
     FirebaseFirestore database;
     FirebaseAuth fAuth;
     ImageView product_image;
@@ -60,6 +77,7 @@ public class ProductDetails extends Fragment {
         this.productID = productID;
         this.sellerID = sellerID;
         this.imgUrl = imgUrl;
+
     }
 
     @Override
@@ -70,6 +88,7 @@ public class ProductDetails extends Fragment {
         product_description = (TextView) v.findViewById(R.id.product_details_description);
         product_price = (TextView) v.findViewById(R.id.product_details_price);
         product_image = (ImageView) v.findViewById(R.id.product_details_image);
+        flagProductToggle = (ToggleButton) v.findViewById((R.id.toggleButton));
         //setting text
         product_name.setText(name);
         product_description.setText(description);
@@ -124,6 +143,37 @@ public class ProductDetails extends Fragment {
                         }
                     }
                 });
+
+
+        SharedPreferences preferences = getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
+        boolean tgpref = preferences.getBoolean("tgpref", true);
+        if (tgpref)
+            flagProductToggle.setChecked(true);
+        else
+            flagProductToggle.setChecked(false);
+
+
+        flagProductToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                final DocumentReference docRef = database.collection("Products").document(productID);
+                if (isChecked) {
+                    @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean("tgpref",true);
+                    docRef.update("flags",FieldValue.increment(1));
+                    editor.commit();
+
+                } else {
+                    SharedPreferences.Editor editor = preferences.edit();
+                    docRef.update("flags",FieldValue.increment(-1));
+                    editor.commit();
+
+                }
+
+
+            }
+
+        });
+
         return v;
     }
 
