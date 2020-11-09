@@ -144,7 +144,6 @@ public class ProductDetails extends Fragment {
                     }
                 });
 
-
         SharedPreferences preferences = getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
         boolean tgpref = preferences.getBoolean("tgpref", true);
         if (tgpref)
@@ -152,9 +151,10 @@ public class ProductDetails extends Fragment {
         else
             flagProductToggle.setChecked(false);
 
-
         flagProductToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+
                 final DocumentReference docRef = database.collection("Products").document(productID);
                 if (isChecked) {
                     @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = preferences.edit();
@@ -164,6 +164,7 @@ public class ProductDetails extends Fragment {
 
                 } else {
                     SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean("tgpref",false);
                     docRef.update("flags",FieldValue.increment(-1));
                     editor.commit();
 
