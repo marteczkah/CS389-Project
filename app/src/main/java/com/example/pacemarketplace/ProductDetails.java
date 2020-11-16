@@ -184,20 +184,21 @@ public class ProductDetails extends Fragment {
                 final DocumentReference docRef = database.collection("Products").document(productID);
                 if (isChecked) {
                     @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = preferences.edit();
-                    editor.putBoolean("tgpref",true);
-                    docRef.update("flags",FieldValue.increment(1));
+                    editor.putBoolean("tgpref", true);
+                    docRef.update("flags", FieldValue.increment(1));
                     editor.commit();
 
                 } else {
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putBoolean("tgpref",false);
-                    docRef.update("flags",FieldValue.increment(-1));
+                    editor.putBoolean("tgpref", false);
+                    docRef.update("flags", FieldValue.increment(-1));
                     editor.commit();
 
                 }
 
 
             }
+        });
 
         //open edit product page
         edit.setOnClickListener(new View.OnClickListener() {
