@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -54,22 +55,26 @@ public class FavoriteProductsPage extends Fragment {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot document = task.getResult();
                 List<String> favoritesID = (List<String>) document.get("favorites");
-                for (String id : favoritesID) {
+                for (final String id : favoritesID) {
                     database.collection("Products").document(id).get()
                             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     DocumentSnapshot document = task.getResult();
-                                    String productName = document.get("name").toString();
-                                    String productDescription = document.get("description").toString();
-                                    String price = document.get("price").toString();
-                                    String productID = document.get("productID").toString();
-                                    String sellerID = document.get("sellerID").toString();
-                                    String imgUri = document.get("ImgURI").toString();
-                                    Product product = new Product(productName, price, productDescription, productID, sellerID, imgUri);
-                                    favoriteProducts.add(product);
-                                    recyclerViewAdapter = new RecyclerViewAdapter(favoriteProducts, context, transaction);
-                                    rv.setAdapter(recyclerViewAdapter);
+                                    if (document.exists()) {
+                                        String productName = document.get("name").toString();
+                                        String productDescription = document.get("description").toString();
+                                        String price = document.get("price").toString();
+                                        String productID = document.get("productID").toString();
+                                        String sellerID = document.get("sellerID").toString();
+                                        String imgUri = document.get("ImgURI").toString();
+                                        Product product = new Product(productName, price, productDescription, productID, sellerID, imgUri);
+                                        favoriteProducts.add(product);
+                                        recyclerViewAdapter = new RecyclerViewAdapter(favoriteProducts, context, transaction);
+                                        rv.setAdapter(recyclerViewAdapter);
+                                    } else {
+                                        docRef.update("favorites", FieldValue.arrayRemove(id));
+                                    }
                                 }
                             });
                 }

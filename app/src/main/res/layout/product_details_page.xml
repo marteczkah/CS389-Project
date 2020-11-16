@@ -63,14 +63,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Message Seller"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:id="@+id/message_seller"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add to Favorites"
         android:layout_gravity="center"
-        android:id="@+id/add_favorite"/>
+        android:id="@+id/add_favorite"
+        android:visibility="gone"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Edit"
+        android:id="@+id/edit_product"
+        android:visibility="gone"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Product Sold"
+        android:id="@+id/product_sold"
+        android:visibility="gone"/>
 
     <ToggleButton
         android:id="@+id/toggleButton"
