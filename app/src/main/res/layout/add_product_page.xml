@@ -7,8 +7,9 @@
     tools:context=".AddProductPage">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:id="@+id/appBarLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/accountPageTopBar"
@@ -20,84 +21,104 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <EditText
-        android:id="@+id/ProductName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:ems="10"
-        android:hint="Add Product Name"
-        android:inputType="textPersonName"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.1" />
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout2"
+        app:layout_constraintVertical_bias="0.085"
+        tools:layout_editor_absoluteX="0dp">
 
-    <EditText
-        android:id="@+id/editTextTextMultiLine"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="Add Description"
-        android:inputType="textMultiLine"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal" />
+        <EditText
+            android:id="@+id/ProductName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:ems="10"
+            android:hint="Add Product Name"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.473"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.1" />
 
-    <EditText
-        android:id="@+id/editTextNumberDecimal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:ems="10"
-        android:hint="Add Price"
-        android:inputType="numberDecimal"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ProductName"
-        app:layout_constraintVertical_bias="0.09" />
+        <EditText
+            android:id="@+id/editTextTextMultiLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="Add Description"
+            android:inputType="textMultiLine"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.473"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal" />
 
-    <Button
-        android:id="@+id/addNameToDatabase"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add product"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine"
-        app:layout_constraintVertical_bias="0.854" />
+        <EditText
+            android:id="@+id/editTextNumberDecimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:ems="10"
+            android:hint="Add Price"
+            android:inputType="numberDecimal"
+            app:layout_constraintBottom_toTopOf="@+id/textView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.473"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ProductName"
+            app:layout_constraintVertical_bias="0.09" />
 
-    <ImageView
-        android:id="@+id/imgview"
-        android:layout_width="188dp"
-        android:layout_height="165dp"
-        app:layout_constraintBottom_toTopOf="@+id/addNameToDatabase"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine"
-        app:layout_constraintVertical_bias="0.151" />
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/categories_spinner"
+            android:spinnerMode="dropdown" />
 
-    <Button
-        android:id="@+id/btnchoose"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="116dp"
-        android:text="Upload Image"
-        app:layout_constraintBottom_toTopOf="@+id/addNameToDatabase"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgview" />
+        <ImageView
+            android:id="@+id/imgview"
+            android:layout_width="188dp"
+            android:layout_height="165dp"
+            app:layout_constraintBottom_toTopOf="@+id/addNameToDatabase"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine"
+            app:layout_constraintVertical_bias="0.151" />
+
+        <Button
+            android:id="@+id/btnchoose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Upload Image"
+            app:layout_constraintBottom_toTopOf="@+id/addNameToDatabase"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgview" />
+
+        <Button
+            android:id="@+id/addNameToDatabase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add product"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine"
+            app:layout_constraintVertical_bias="0.854" />
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

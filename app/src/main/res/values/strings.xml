@@ -9,4 +9,15 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_menu">Search Menu</string>
+    <string name="categories">Product Category</string>
+    <string-array name="categories_array">
+        <item>Textbooks</item>
+        <item>Electronics</item>
+        <item>Dorm Supplies</item>
+        <item>Clothes</item>
+        <item>School Supplies</item>
+        <item>Movies, Music &amp; Games</item>
+        <item>Beauty &amp; Health</item>
+        <item>Other</item>
+    </string-array>
 </resources>

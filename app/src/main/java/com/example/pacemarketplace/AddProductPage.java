@@ -9,13 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -45,6 +48,8 @@ public class AddProductPage extends Fragment {
     Button ch;
     ImageView img;
     StorageReference mStorageRef;
+    Spinner categorySpinner;
+    FragmentManager fragmentManager;
     public Uri imguri;
 
     FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -60,6 +65,13 @@ public class AddProductPage extends Fragment {
         addName = (EditText) v.findViewById(R.id.ProductName);
         addPrice = (EditText) v.findViewById(R.id.editTextNumberDecimal);
         addDescription = (EditText) v.findViewById(R.id.editTextTextMultiLine);
+        categorySpinner = (Spinner) v.findViewById(R.id.categories_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.categories_array, android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(adapter);
+        fragmentManager = getFragmentManager();
+
 
         fAuth = FirebaseAuth.getInstance();
 
@@ -82,6 +94,7 @@ public class AddProductPage extends Fragment {
                 String productName = addName.getText().toString();
                 String productPrice = addPrice.getText().toString();
                 String productDescription = addDescription.getText().toString();
+                String category = categorySpinner.getSelectedItem().toString();
                 String fileURI = Fileuploader();
 
 
@@ -93,22 +106,26 @@ public class AddProductPage extends Fragment {
                 data.put("description", productDescription);
                 data.put("ImgURI",fileURI);
                 data.put("flags", 0);
-
                 data.put("sellerID", userID);
                 data.put("productID", id);
+                data.put("category", category);
                 database.collection("Products").document(id).set(data)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 DocumentReference docRef = database.collection("Users").document(userID);
                                 docRef.update("userProducts", FieldValue.arrayUnion(id));
-                                Toast.makeText(getActivity().getBaseContext(), "Success", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity().getBaseContext(), "Product added", Toast.LENGTH_LONG).show();
+                                Search sp = new Search();
+                                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                transaction.replace(R.id.fragment, sp);
+                                transaction.commit();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getActivity().getBaseContext(), "Failure", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity().getBaseContext(), "Couldn't add the product", Toast.LENGTH_LONG).show();
 
                             }
                         });
@@ -135,8 +152,6 @@ public class AddProductPage extends Fragment {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // Get a URL to the uploaded content
                         String downloadUrl = taskSnapshot.getStorage().getDownloadUrl().toString();
-
-                        Toast.makeText(getActivity().getBaseContext(), "Image Uploaded successfully",Toast.LENGTH_LONG).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -165,6 +180,7 @@ public class AddProductPage extends Fragment {
         {
             imguri=data.getData();
             img.setImageURI(imguri);
+            img.setVisibility(getView().VISIBLE);
         }
     }
 
