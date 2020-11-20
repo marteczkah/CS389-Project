@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,6 +25,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
@@ -48,8 +50,8 @@ public class AddProductPage extends Fragment {
     Button ch;
     ImageView img;
     StorageReference mStorageRef;
-    Spinner categorySpinner;
     FragmentManager fragmentManager;
+    SwitchMaterial priceNegotiation;
     public Uri imguri;
 
     FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -65,14 +67,15 @@ public class AddProductPage extends Fragment {
         addName = (EditText) v.findViewById(R.id.ProductName);
         addPrice = (EditText) v.findViewById(R.id.editTextNumberDecimal);
         addDescription = (EditText) v.findViewById(R.id.editTextTextMultiLine);
-        categorySpinner = (Spinner) v.findViewById(R.id.categories_spinner);
+        priceNegotiation = (SwitchMaterial) v.findViewById(R.id.price_negotiation);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.categories_array, android.R.layout.simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(adapter);
+        AutoCompleteTextView editTextFilledExposedDropdown =
+                v.findViewById(R.id.filled_exposed_dropdown);
+        editTextFilledExposedDropdown.setAdapter(adapter);
+
         fragmentManager = getFragmentManager();
-
-
         fAuth = FirebaseAuth.getInstance();
 
         //Adding Image Stuff
@@ -94,7 +97,8 @@ public class AddProductPage extends Fragment {
                 String productName = addName.getText().toString();
                 String productPrice = addPrice.getText().toString();
                 String productDescription = addDescription.getText().toString();
-                String category = categorySpinner.getSelectedItem().toString();
+                String category = editTextFilledExposedDropdown.getText().toString();
+                Boolean negotiation = priceNegotiation.isChecked();
                 String fileURI = Fileuploader();
 
 
@@ -109,6 +113,7 @@ public class AddProductPage extends Fragment {
                 data.put("sellerID", userID);
                 data.put("productID", id);
                 data.put("category", category);
+                data.put("pNegotation", negotiation);
                 database.collection("Products").document(id).set(data)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
