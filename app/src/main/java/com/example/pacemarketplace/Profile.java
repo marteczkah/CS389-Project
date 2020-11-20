@@ -15,10 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -26,11 +30,6 @@ import java.util.Map;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Profile#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Profile extends Fragment {
 
     private Button addProductPageButton;
@@ -38,7 +37,9 @@ public class Profile extends Fragment {
     private Button accountSettingsButton;
     private Button yourProductsPageButton;
     private Button userLogOut;
+    private TextView helloName;
     FirebaseAuth fAuth;
+    FirebaseFirestore database;
 
     Context mContext = getContext();
 
@@ -61,8 +62,23 @@ public class Profile extends Fragment {
         accountSettingsButton = (Button) rootView.findViewById(R.id.settingsPageButton);
         yourProductsPageButton = (Button) rootView.findViewById(R.id.yourProductsButton);
         userLogOut = (Button) rootView.findViewById(R.id.logout);
+        helloName = (TextView) rootView.findViewById(R.id.hello_name);
         fAuth = FirebaseAuth.getInstance();
+        database = FirebaseFirestore.getInstance();
 
+        String userID = fAuth.getUid();
+
+        database.collection("Users").document(userID).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            String userName = document.get("fName").toString();
+                            helloName.setText("Hello " + userName + "!");
+                        }
+                    }
+                });
 
         addProductPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,10 +146,6 @@ public class Profile extends Fragment {
         transaction.commit();
     }
 
-//    public void addProductName(View view){
-//        FirebaseFirestore database = FirebaseFirestore.getInstance();
-//
-//    }
     public void logout() {
         FirebaseAuth.getInstance().signOut();//logout
         mContext = getContext();
