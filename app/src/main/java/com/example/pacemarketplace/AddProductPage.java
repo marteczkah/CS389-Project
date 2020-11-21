@@ -162,7 +162,7 @@ public class AddProductPage extends Fragment {
                     data.put("sellerID", userID);
                     data.put("productID", id);
                     data.put("category", category);
-                    data.put("pNegotation", negotiation);
+                    data.put("pNegotiation", negotiation);
                     database.collection("Products").document(id).set(data)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override

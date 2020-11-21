@@ -45,7 +45,8 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="10dp"
                 android:hint="Add Product Name"
-                android:layout_marginTop="15dp">
+                android:layout_marginTop="15dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/ProductName"
@@ -60,7 +61,8 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="10dp"
-                android:hint="Add Product Description">
+                android:hint="Add Product Description"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextTextMultiLine"
@@ -78,12 +80,13 @@
                 android:weightSum="100">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:layout_weight="25"
-                    android:hint="Product Category">
+                    android:hint="Product Category"
+                    android:layout_gravity="center_vertical">
 
                     <AutoCompleteTextView
                         android:id="@+id/filled_exposed_dropdown"
@@ -96,7 +99,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="75"
-                    android:hint="$">
+                    android:hint="$"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTextNumberDecimal"

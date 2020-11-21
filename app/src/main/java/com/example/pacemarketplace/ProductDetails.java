@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.graphics.drawable.Drawable;
@@ -65,25 +66,28 @@ import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 public class ProductDetails extends Fragment {
 
     String name, description, price, productID, sellerID, imgUrl;
-    TextView product_name, product_description, product_price;
-    Button addFavorite, messageSeller, edit, productSold;
+    TextView product_name, product_description, product_price, price_negotiation;
+    Button messageSeller, edit, productSold;
+    ImageButton addFavorite;
     ToggleButton flagProductToggle;
     FirebaseFirestore database;
     FirebaseAuth fAuth;
     ImageView product_image;
+    Boolean pNegotiation;
 
     public ProductDetails() {
     //required empty constructor
     }
 
-    public ProductDetails(String name, String description, String price, String productID, String sellerID, String imgUrl){
+    public ProductDetails(String name, String description, String price, String productID,
+                          String sellerID, String imgUrl, Boolean pNegotiation){
         this.name = name;
         this.description = description;
         this.price = price;
         this.productID = productID;
         this.sellerID = sellerID;
         this.imgUrl = imgUrl;
-
+        this.pNegotiation = pNegotiation;
     }
 
     @Override
@@ -96,8 +100,9 @@ public class ProductDetails extends Fragment {
         product_name = (TextView) v.findViewById(R.id.product_details_name);
         product_description = (TextView) v.findViewById(R.id.product_details_description);
         product_price = (TextView) v.findViewById(R.id.product_details_price);
+        price_negotiation = (TextView) v.findViewById(R.id.product_details_negotation);
         //buttons
-        addFavorite = (Button) v.findViewById(R.id.add_favorite);
+        addFavorite = (ImageButton) v.findViewById(R.id.add_favorite);
         messageSeller = (Button) v.findViewById(R.id.message_seller);
         edit = (Button) v.findViewById(R.id.edit_product);
         productSold = (Button) v.findViewById(R.id.product_sold);
@@ -114,14 +119,16 @@ public class ProductDetails extends Fragment {
                 @Override
                 public void onSuccess(Uri uri) {
                     String url = uri.toString();
-                    Picasso.get().load(url).fit().into(product_image);
+//                    Picasso.get().load(url).fit().into(product_image);
+                    Picasso.get().load(url).centerCrop().resize(product_image.getWidth(), product_image.getHeight())
+                            .into(product_image);
                 }
             }).wait(1000);
         }catch (Exception e){
 
         }
         database = FirebaseFirestore.getInstance();
-        addFavorite = (Button) v.findViewById(R.id.add_favorite);
+        addFavorite = (ImageButton) v.findViewById(R.id.add_favorite);
         fAuth = FirebaseAuth.getInstance();
         final String userID = fAuth.getCurrentUser().getUid();
 
@@ -132,6 +139,10 @@ public class ProductDetails extends Fragment {
         } else {
             addFavorite.setVisibility(v.VISIBLE);
             messageSeller.setVisibility(v.VISIBLE);
+        }
+
+        if (pNegotiation) {
+            price_negotiation.setText(" - open to negotiation");
         }
 
         //adding/removing product from favorites
@@ -147,10 +158,12 @@ public class ProductDetails extends Fragment {
                         List<String> favoritesList = (List<String>) document.get("favorites");
                         if (favoritesList.contains(productID)) {
                             docRef.update("favorites", FieldValue.arrayRemove(productID));
-                            addFavorite.setText("Add to Favorites");
+//                            addFavorite.setText("Add to Favorites");
+                            addFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favourite_outlined_24dp));
                         } else {
                             docRef.update("favorites", FieldValue.arrayUnion(productID));
-                            addFavorite.setText("Remove from Favorites");
+//                            addFavorite.setText("Remove from Favorites");
+                            addFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favourite_filled_24dp));
                         }
                     }
                 });
@@ -165,7 +178,8 @@ public class ProductDetails extends Fragment {
                         DocumentSnapshot document = task.getResult();
                         List<String> favorites = (List<String>) document.get("favorites");
                         if (favorites.contains(productID)) {
-                            addFavorite.setText("Remove from favorites");
+//                            addFavorite.setText("Remove from favorites");
+                            addFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favourite_filled_24dp));
                         }
                     }
                 });

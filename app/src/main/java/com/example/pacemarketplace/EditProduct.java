@@ -14,12 +14,14 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EditProduct extends Fragment {
 
     String productID, productName, productDescription, productPrice;
     TextView productNameTV, productDescriptionTV, productPriceTV;
+    TextInputLayout productNameLayout, productDescriptionLayout, productPriceLayout;
     Button changeName, changeDescription, changePrice, deleteProduct, submitChanges;
     EditText newName, newDescription, newPrice;
     Boolean isNewName = false, isNewDescription = false, isNewPrice = false;
@@ -57,12 +59,16 @@ public class EditProduct extends Fragment {
         productDescriptionTV.setText(productDescription);
         productPriceTV = (TextView) v.findViewById(R.id.price_edit);
         productPriceTV.setText("$" + productPrice);
+        //text view layouts
+        productNameLayout = (TextInputLayout) v.findViewById(R.id.change_name_layout);
+        productDescriptionLayout = (TextInputLayout) v.findViewById(R.id.change_description_layout);
+        productPriceLayout = (TextInputLayout) v.findViewById(R.id.change_price_layout);
 
         //open text edit to change name
         changeName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                newName.setVisibility(v.VISIBLE);
+                productNameLayout.setVisibility(v.VISIBLE);
                 isNewName = true;
             }
         });
@@ -70,7 +76,7 @@ public class EditProduct extends Fragment {
         changeDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                newDescription.setVisibility(v.VISIBLE);
+                productDescriptionLayout.setVisibility(v.VISIBLE);
                 isNewDescription = true;
             }
         });
@@ -78,7 +84,7 @@ public class EditProduct extends Fragment {
         changePrice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                newPrice.setVisibility(v.VISIBLE);
+                productPriceLayout.setVisibility(v.VISIBLE);
                 isNewPrice = true;
             }
         });
@@ -111,18 +117,24 @@ public class EditProduct extends Fragment {
             public void onClick(View v) {
                 if (isNewName) {
                     String updateName = newName.getText().toString();
-                    database.collection("Products").document(productID)
-                            .update("name", updateName);
+                    if (!updateName.equals("")) {
+                        database.collection("Products").document(productID)
+                                .update("name", updateName);
+                    }
                 }
                 if (isNewDescription) {
                     String updateDescription = newDescription.getText().toString();
-                    database.collection("Products").document(productID)
-                            .update("description", updateDescription);
+                    if (!updateDescription.equals("")) {
+                        database.collection("Products").document(productID)
+                                .update("description", updateDescription);
+                    }
                 }
                 if (isNewPrice) {
                     String updatePrice = newPrice.getText().toString();
-                    database.collection("Products").document(productID)
-                            .update("price", updatePrice);
+                    if (!updatePrice.equals("")) {
+                        database.collection("Products").document(productID)
+                                .update("price", updatePrice);
+                    }
                 }
             }
         });

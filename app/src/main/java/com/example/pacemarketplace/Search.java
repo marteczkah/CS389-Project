@@ -111,7 +111,8 @@ public class Search extends Fragment {
                     String productID = document.get("productID").toString();
                     String sellerID = document.get("sellerID").toString();
                     String getImgURI = document.get("ImgURI").toString();
-                    Product product = new Product(productName, price, productDescription, productID, sellerID, getImgURI); //getImgURI
+                    Boolean pNegotiation = (Boolean) document.get("pNegotiation");
+                    Product product = new Product(productName, price, productDescription, productID, sellerID, getImgURI, pNegotiation); //getImgURI
                     allProducts.add(product);
                     recyclerViewAdapter = new RecyclerViewAdapter(allProducts, context, transaction);
                     rv.setAdapter(recyclerViewAdapter);

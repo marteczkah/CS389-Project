@@ -9,6 +9,7 @@ public class Product {
     public String ImgURI;
     public String productID;
     public String sellerID;
+    public Boolean pNegotiation;
 
     public Product(){
         //empty constructor needed
@@ -24,13 +25,15 @@ public class Product {
     }
 
 
-    public Product(String name, String price, String description, String productID, String sellerID, String ImgURI) {
+    public Product(String name, String price, String description, String productID, String sellerID, String ImgURI,
+                   Boolean pNegotiation) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.productID = productID;
         this.sellerID = sellerID;
         this.ImgURI = ImgURI;
+        this.pNegotiation = pNegotiation;
     }
 
     @PropertyName("name")
@@ -81,5 +84,14 @@ public class Product {
 
     public void setSellerID(String sellerID) {
         this.sellerID = sellerID;
+    }
+
+    @PropertyName("pNegotiation")
+    public Boolean getpNegotiation() {
+        return pNegotiation;
+    }
+
+    public void setpNegotiation(Boolean pNegotiation){
+        this.pNegotiation = pNegotiation;
     }
 }
