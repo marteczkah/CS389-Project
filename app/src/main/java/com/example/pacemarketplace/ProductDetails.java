@@ -139,8 +139,10 @@ public class ProductDetails extends Fragment {
         } else {
             addFavorite.setVisibility(v.VISIBLE);
             messageSeller.setVisibility(v.VISIBLE);
+            flagProductToggle.setVisibility(v.VISIBLE);
         }
 
+        //setting the price open to negotiation text
         if (pNegotiation) {
             price_negotiation.setText(" - open to negotiation");
         }
