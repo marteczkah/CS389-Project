@@ -15,6 +15,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -55,6 +57,7 @@ public class AddProductPage extends Fragment {
     FragmentManager fragmentManager;
     SwitchMaterial priceNegotiation;
     TextView nameWarning, priceWarning, descriptionWarning, categoryWarning, imageWarning;
+    ScrollView scrollView;
     Boolean photoAdded = false;
     public Uri imguri;
 
@@ -72,6 +75,7 @@ public class AddProductPage extends Fragment {
         addPrice = (EditText) v.findViewById(R.id.editTextNumberDecimal);
         addDescription = (EditText) v.findViewById(R.id.editTextTextMultiLine);
         priceNegotiation = (SwitchMaterial) v.findViewById(R.id.price_negotiation);
+        scrollView = (ScrollView) v.findViewById(R.id.add_product_view);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.categories_array, android.R.layout.simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -169,7 +173,9 @@ public class AddProductPage extends Fragment {
                                 public void onSuccess(Void aVoid) {
                                     DocumentReference docRef = database.collection("Users").document(userID);
                                     docRef.update("userProducts", FieldValue.arrayUnion(id));
-                                    Toast.makeText(getActivity().getBaseContext(), "Product added", Toast.LENGTH_LONG).show();
+//                                    Toast.makeText(getActivity().getBaseContext(), "Product added", Toast.LENGTH_LONG).show();
+                                    Snackbar.make(scrollView, "Product added successfully",
+                                            Snackbar.LENGTH_SHORT).show();
                                     Search sp = new Search();
                                     FragmentTransaction transaction = fragmentManager.beginTransaction();
                                     transaction.replace(R.id.fragment, sp);
@@ -179,8 +185,8 @@ public class AddProductPage extends Fragment {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getActivity().getBaseContext(), "Couldn't add the product", Toast.LENGTH_LONG).show();
-
+                                    Snackbar.make(scrollView, "Couldn't add the product",
+                                            Snackbar.LENGTH_SHORT).show();
                                 }
                             });
                 }
