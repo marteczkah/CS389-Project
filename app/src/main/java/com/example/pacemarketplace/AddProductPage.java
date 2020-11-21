@@ -3,6 +3,7 @@ package com.example.pacemarketplace;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -52,6 +54,8 @@ public class AddProductPage extends Fragment {
     StorageReference mStorageRef;
     FragmentManager fragmentManager;
     SwitchMaterial priceNegotiation;
+    TextView nameWarning, priceWarning, descriptionWarning, categoryWarning, imageWarning;
+    Boolean photoAdded = false;
     public Uri imguri;
 
     FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -83,10 +87,17 @@ public class AddProductPage extends Fragment {
         img=(ImageView)v.findViewById(R.id.imgview);
         mStorageRef= FirebaseStorage.getInstance().getReference("images");
 
+        nameWarning = (TextView) v.findViewById(R.id.product_name_warning);
+        priceWarning = (TextView) v.findViewById(R.id.product_price_warning);
+        descriptionWarning = (TextView) v.findViewById(R.id.product_description_warning);
+        categoryWarning = (TextView) v.findViewById(R.id.product_category_warning);
+        imageWarning = (TextView) v.findViewById(R.id.product_image_warning);
+
         ch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Filechooser();
+                photoAdded = true;
             }
         });
 
@@ -94,46 +105,85 @@ public class AddProductPage extends Fragment {
         addProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Boolean hasName = true, hasDescription = true, hasPrice = true, hasCategory = true,
+                        hasImage=true;
                 String productName = addName.getText().toString();
+                //checking if user added product name
+                if (productName.equals("")) {
+                    nameWarning.setVisibility(v.VISIBLE);
+                    hasName = false;
+                } else {
+                    nameWarning.setVisibility(v.GONE);
+                }
                 String productPrice = addPrice.getText().toString();
+                //checking if user added product price
+                if (productPrice.equals("")) {
+                    priceWarning.setVisibility(v.VISIBLE);
+                    hasPrice = false;
+                } else {
+                    priceWarning.setVisibility(v.GONE);
+                }
                 String productDescription = addDescription.getText().toString();
+                //checking if user added product description
+                if (productDescription.equals("")) {
+                    descriptionWarning.setVisibility(v.VISIBLE);
+                    hasDescription = false;
+                } else {
+                    descriptionWarning.setVisibility(v.GONE);
+                }
                 String category = editTextFilledExposedDropdown.getText().toString();
+                //checking if user added product category
+                if (category.equals("")) {
+                    categoryWarning.setVisibility(v.VISIBLE);
+                    hasCategory = false;
+                } else {
+                    categoryWarning.setVisibility(v.GONE);
+                }
                 Boolean negotiation = priceNegotiation.isChecked();
-                String fileURI = Fileuploader();
+                String fileURI = "";
+                if (!photoAdded) {
+                    imageWarning.setVisibility(v.VISIBLE);
+                } else {
+                    imageWarning.setVisibility(v.GONE);
+                    fileURI = Fileuploader();
+                }
 
 
                 final String userID = fAuth.getCurrentUser().getUid();
                 final String id = database.collection("Products").document().getId();
-                Map<String,Object> data = new HashMap<>();
-                data.put("name", productName);
-                data.put("price", productPrice);
-                data.put("description", productDescription);
-                data.put("ImgURI",fileURI);
-                data.put("flags", 0);
-                data.put("sellerID", userID);
-                data.put("productID", id);
-                data.put("category", category);
-                data.put("pNegotation", negotiation);
-                database.collection("Products").document(id).set(data)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                DocumentReference docRef = database.collection("Users").document(userID);
-                                docRef.update("userProducts", FieldValue.arrayUnion(id));
-                                Toast.makeText(getActivity().getBaseContext(), "Product added", Toast.LENGTH_LONG).show();
-                                Search sp = new Search();
-                                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                                transaction.replace(R.id.fragment, sp);
-                                transaction.commit();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getActivity().getBaseContext(), "Couldn't add the product", Toast.LENGTH_LONG).show();
 
-                            }
-                        });
+                if (hasCategory && hasName && hasPrice && hasDescription && hasImage) {
+                    Map<String,Object> data = new HashMap<>();
+                    data.put("name", productName);
+                    data.put("price", productPrice);
+                    data.put("description", productDescription);
+                    data.put("ImgURI",fileURI);
+                    data.put("flags", 0);
+                    data.put("sellerID", userID);
+                    data.put("productID", id);
+                    data.put("category", category);
+                    data.put("pNegotation", negotiation);
+                    database.collection("Products").document(id).set(data)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    DocumentReference docRef = database.collection("Users").document(userID);
+                                    docRef.update("userProducts", FieldValue.arrayUnion(id));
+                                    Toast.makeText(getActivity().getBaseContext(), "Product added", Toast.LENGTH_LONG).show();
+                                    Search sp = new Search();
+                                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                    transaction.replace(R.id.fragment, sp);
+                                    transaction.commit();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getActivity().getBaseContext(), "Couldn't add the product", Toast.LENGTH_LONG).show();
+
+                                }
+                            });
+                }
 //                Fileuploader();
             }
         });

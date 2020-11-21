@@ -117,6 +117,55 @@
                 android:text="Price open to negotiation"
                 android:textSize="16dp" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You need to add product name!"
+                android:gravity="center_horizontal"
+                android:textColor="#ff0000"
+                android:visibility="gone"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/product_name_warning"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You need to add product description!"
+                android:gravity="center_horizontal"
+                android:textColor="#ff0000"
+                android:visibility="gone"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/product_description_warning"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You need to add product price!"
+                android:gravity="center_horizontal"
+                android:textColor="#ff0000"
+                android:visibility="gone"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/product_price_warning"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You need to add product category!"
+                android:gravity="center_horizontal"
+                android:textColor="#ff0000"
+                android:visibility="gone"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/product_category_warning"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You need to add product image!"
+                android:gravity="center_horizontal"
+                android:textColor="#ff0000"
+                android:visibility="gone"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/product_image_warning"/>
 
             <ImageView
                 android:id="@+id/imgview"
