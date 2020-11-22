@@ -31,6 +31,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.slider.LabelFormatter;
+import com.google.android.material.slider.RangeSlider;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,6 +40,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,8 +52,9 @@ public class Search extends Fragment {
     RecyclerViewAdapter recyclerViewAdapter;
     RecyclerView rv;
     Dialog filterDialog;
-    Button filters, categories;
+    Button categories, applyPriceFilter;
     RelativeLayout loadingProducts, noProductsFound;
+    RangeSlider priceSlider;
 
     public TextView productTitle;
 
@@ -77,19 +81,38 @@ public class Search extends Fragment {
         final ArrayList<Product> filteredProducts = new ArrayList<>();
         transaction = getFragmentManager();
         categories = (Button) rootView.findViewById(R.id.filter_categories);
+        applyPriceFilter = (Button) rootView.findViewById(R.id.apply_price);
         //relative layouts
         noProductsFound = (RelativeLayout) rootView.findViewById(R.id.search_page_no);
         loadingProducts = (RelativeLayout) rootView.findViewById(R.id.search_page_loading);
+        //range slider
+        priceSlider = (RangeSlider) rootView.findViewById(R.id.price_slider);
 
         SearchView searchView = rootView.findViewById(R.id.search_menu);
 
-        filters = rootView.findViewById(R.id.filters_button);
-        filters.setOnClickListener(new View.OnClickListener() {
+        List<Float> sliderValues = priceSlider.getValues();
+
+        applyPriceFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filterDialog = new Dialog(getContext());
-                filterDialog.setContentView(R.layout.filters_dialog);
-                filterDialog.show();
+                List<Float> sliderValues = priceSlider.getValues();
+                Float maxValue = sliderValues.get(1);
+                Float minValue = sliderValues.get(0);
+                ArrayList<Product> filterProducts = new ArrayList<>();
+                for (int i = 0; i < allProducts.size(); i++) {
+                    String productPrice = allProducts.get(i).getProductPrice();
+                    Float priceNumber = Float.parseFloat(productPrice);
+                    if (priceNumber < maxValue && priceNumber > minValue) {
+                        filterProducts.add(allProducts.get(i));
+                    }
+                }
+                if (filterProducts.size() == 0) {
+                    noProductsFound.setVisibility(v.VISIBLE);
+                } else {
+                    noProductsFound.setVisibility(v.GONE);
+                }
+                recyclerViewAdapter = new RecyclerViewAdapter(filterProducts, context, transaction);
+                rv.setAdapter(recyclerViewAdapter);
             }
         });
 
@@ -139,6 +162,7 @@ public class Search extends Fragment {
                     "Clothes", "School Supplies", "Movies, Music & Games", "Beauty & Health",
                     "Other"};
                 List<String> checkedValues = new ArrayList<>();
+                ArrayList<Product> emptyList = new ArrayList<>();
                 new MaterialAlertDialogBuilder(getContext())
                         .setTitle("Filter by category")
                         .setPositiveButton("Apply filter", new DialogInterface.OnClickListener() {
@@ -152,13 +176,13 @@ public class Search extends Fragment {
                                 for (int i = 0; i < allProducts.size(); i++) {
                                     for (int m = 0; m < checkedValues.size(); m++) {
                                         if (allProducts.get(i).getCategory().equals(checkedValues.get(m))) {
-                                            filteredProducts.add(allProducts.get(i));
+                                            emptyList.add(allProducts.get(i));
                                         }
                                     }
                                 }
-                                recyclerViewAdapter = new RecyclerViewAdapter(filteredProducts, context, transaction);
+                                recyclerViewAdapter = new RecyclerViewAdapter(emptyList, context, transaction);
                                 rv.setAdapter(recyclerViewAdapter);
-                                if (filteredProducts.size() == 0) {
+                                if (emptyList.size() == 0) {
                                     noProductsFound.setVisibility(rootView.VISIBLE);
                                 } else {
                                     noProductsFound.setVisibility(rootView.GONE);
