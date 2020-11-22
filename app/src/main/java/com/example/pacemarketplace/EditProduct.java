@@ -1,19 +1,25 @@
 package com.example.pacemarketplace;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -25,6 +31,7 @@ public class EditProduct extends Fragment {
     Button changeName, changeDescription, changePrice, deleteProduct, submitChanges;
     EditText newName, newDescription, newPrice;
     Boolean isNewName = false, isNewDescription = false, isNewPrice = false;
+    LinearLayout layout;
     FirebaseFirestore database;
 
     public EditProduct() {
@@ -63,6 +70,8 @@ public class EditProduct extends Fragment {
         productNameLayout = (TextInputLayout) v.findViewById(R.id.change_name_layout);
         productDescriptionLayout = (TextInputLayout) v.findViewById(R.id.change_description_layout);
         productPriceLayout = (TextInputLayout) v.findViewById(R.id.change_price_layout);
+        //linear layout
+        layout = (LinearLayout) v.findViewById(R.id.edit_product_layout);
 
         //open text edit to change name
         changeName.setOnClickListener(new View.OnClickListener() {
@@ -92,23 +101,40 @@ public class EditProduct extends Fragment {
         deleteProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                database.collection("Products").document(productID).delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                new MaterialAlertDialogBuilder(getContext()).setTitle("Do you want to delete " +
+                        productName + "?")
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(getActivity().getBaseContext(),
-                                        "Product deleted from the database", Toast.LENGTH_LONG)
-                                        .show();
+                            public void onClick(DialogInterface dialog, int which) {
+
                             }
                         })
-                        .addOnFailureListener(new OnFailureListener() {
+                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getActivity().getBaseContext(),
-                                        "Product not deleted from the database", Toast.LENGTH_LONG)
-                                        .show();
+                            public void onClick(DialogInterface dialog, int which) {
+                                database.collection("Products").document(productID).delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Snackbar.make(layout, "Product deleted.",
+                                                        Snackbar.LENGTH_SHORT).show();
+                                                Search sp = new Search();
+                                                FragmentManager transaction = getFragmentManager();
+                                                FragmentTransaction fragmentTransaction = transaction.beginTransaction();
+                                                fragmentTransaction.replace(R.id.fragment, sp);
+                                                fragmentTransaction.commit();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Snackbar.make(layout, "Couldn't delete the product. Try again.",
+                                                        Snackbar.LENGTH_SHORT).show();
+                                            }
+                                        });
                             }
-                        });
+                        })
+                        .show();
             }
         });
         //submit changes
@@ -136,6 +162,13 @@ public class EditProduct extends Fragment {
                                 .update("price", updatePrice);
                     }
                 }
+                Snackbar.make(layout, "Changes submitted.",
+                        Snackbar.LENGTH_SHORT).show();
+                Search sp = new Search();
+                FragmentManager transaction = getFragmentManager();
+                FragmentTransaction fragmentTransaction = transaction.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment, sp);
+                fragmentTransaction.commit();
             }
         });
 

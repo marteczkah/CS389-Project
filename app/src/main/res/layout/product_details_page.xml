@@ -30,7 +30,7 @@
             android:layout_height="250dp"
             android:id="@+id/product_details_image"
             android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/loading_image" />
 
         <ToggleButton
             android:id="@+id/toggleButton"
@@ -44,7 +44,8 @@
             android:textOff=""
             android:textOn=""
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

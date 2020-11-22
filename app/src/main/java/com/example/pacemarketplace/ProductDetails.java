@@ -5,6 +5,7 @@ import java.net.URL;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,12 +16,15 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.graphics.drawable.Drawable;
 import androidx.fragment.app.Fragment;
 
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -74,6 +78,7 @@ public class ProductDetails extends Fragment {
     FirebaseAuth fAuth;
     ImageView product_image;
     Boolean pNegotiation;
+    LinearLayout linearLayout;
 
     public ProductDetails() {
     //required empty constructor
@@ -110,6 +115,8 @@ public class ProductDetails extends Fragment {
         product_name.setText(name);
         product_description.setText(description);
         product_price.setText("$"+price);
+        //linear layout
+        linearLayout = (LinearLayout) v.findViewById(R.id.product_details_page);
 
         StorageReference imgRef = FirebaseStorage
                                         .getInstance()
@@ -132,15 +139,17 @@ public class ProductDetails extends Fragment {
         fAuth = FirebaseAuth.getInstance();
         final String userID = fAuth.getCurrentUser().getUid();
 
-        //changing visibility of buttons based on whether user is the seller of product or not
+        //changing visibility of buttons based on whether user is the seller of the product or not
         if (userID.equals(sellerID)) {
             edit.setVisibility(v.VISIBLE);
             productSold.setVisibility(v.VISIBLE);
         } else {
             addFavorite.setVisibility(v.VISIBLE);
             messageSeller.setVisibility(v.VISIBLE);
+            flagProductToggle.setVisibility(v.VISIBLE);
         }
 
+        //setting the price open to negotiation text
         if (pNegotiation) {
             price_negotiation.setText(" - open to negotiation");
         }
@@ -193,8 +202,6 @@ public class ProductDetails extends Fragment {
 
         flagProductToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-
                 final DocumentReference docRef = database.collection("Products").document(productID);
                 if (isChecked) {
                     @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = preferences.edit();
@@ -230,48 +237,63 @@ public class ProductDetails extends Fragment {
         productSold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Date currentTime = Calendar.getInstance().getTime();
-                Map<String, Object> soldProduct = new HashMap<>();
-                soldProduct.put("name", name);
-                soldProduct.put("description", description);
-                soldProduct.put("price", price);
-                soldProduct.put("date", currentTime);
-                database = FirebaseFirestore.getInstance();
-                String id = database.collection("SoldProducts").document().getId();
-                database.collection("SoldProducts").document(id).set(soldProduct)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                new MaterialAlertDialogBuilder(getContext())
+                        .setTitle("Do you want to mark " + name + " as sold?")
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(getActivity().getBaseContext(),
-                                        "Product Marked Sold", Toast.LENGTH_LONG).show();
+                            public void onClick(DialogInterface dialog, int which) {
+
                             }
                         })
-                        .addOnFailureListener(new OnFailureListener() {
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getActivity().getBaseContext(),
-                                        "Couldn't mark product as sold", Toast.LENGTH_LONG)
-                                        .show();
-                                return;
-                            }
-                        });
-                database.collection("Products").document(productID).delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(getActivity().getBaseContext(),
-                                        "Product deleted from the database", Toast.LENGTH_LONG)
-                                        .show();
+                            public void onClick(DialogInterface dialog, int which) {
+                                Date currentTime = Calendar.getInstance().getTime();
+                                Map<String, Object> soldProduct = new HashMap<>();
+                                soldProduct.put("name", name);
+                                soldProduct.put("description", description);
+                                soldProduct.put("price", price);
+                                soldProduct.put("date", currentTime);
+                                database = FirebaseFirestore.getInstance();
+                                String id = database.collection("SoldProducts").document().getId();
+                                database.collection("SoldProducts").document(id).set(soldProduct)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Snackbar.make(linearLayout, "Product marked sold.",
+                                                        Snackbar.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Snackbar.make(linearLayout, "Couldn't mark product as sold. Try again.",
+                                                        Snackbar.LENGTH_SHORT).show();
+                                                return;
+                                            }
+                                        });
+                                database.collection("Products").document(productID).delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Search sp = new Search();
+                                                FragmentManager transaction = getFragmentManager();
+                                                FragmentTransaction fragmentTransaction = transaction.beginTransaction();
+                                                fragmentTransaction.replace(R.id.fragment, sp);
+                                                fragmentTransaction.commit();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Snackbar.make(linearLayout, "Couldn't mark product as sold. Try again.",
+                                                        Snackbar.LENGTH_SHORT).show();
+                                                return;
+                                            }
+                                        });
                             }
                         })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getActivity().getBaseContext(),
-                                        "Couldn't delete the product from database",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        });
+                        .show();
             }
         });
 
