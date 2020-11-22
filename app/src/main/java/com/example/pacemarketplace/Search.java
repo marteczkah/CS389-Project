@@ -50,6 +50,7 @@ public class Search extends Fragment {
     RecyclerView rv;
     Dialog filterDialog;
     Button filters, categories;
+    RelativeLayout loadingProducts, noProductsFound;
 
     public TextView productTitle;
 
@@ -76,6 +77,10 @@ public class Search extends Fragment {
         final ArrayList<Product> filteredProducts = new ArrayList<>();
         transaction = getFragmentManager();
         categories = (Button) rootView.findViewById(R.id.filter_categories);
+        //relative layouts
+        noProductsFound = (RelativeLayout) rootView.findViewById(R.id.search_page_no);
+        loadingProducts = (RelativeLayout) rootView.findViewById(R.id.search_page_loading);
+
         SearchView searchView = rootView.findViewById(R.id.search_menu);
 
         filters = rootView.findViewById(R.id.filters_button);
@@ -119,6 +124,7 @@ public class Search extends Fragment {
                     String category = (String) document.get("category");
                     Product product = new Product(productName, price, productDescription, productID,
                             sellerID, getImgURI, pNegotiation, category); //getImgURI
+                    loadingProducts.setVisibility(rootView.GONE);
                     allProducts.add(product);
                     recyclerViewAdapter = new RecyclerViewAdapter(allProducts, context, transaction);
                     rv.setAdapter(recyclerViewAdapter);
@@ -152,6 +158,11 @@ public class Search extends Fragment {
                                 }
                                 recyclerViewAdapter = new RecyclerViewAdapter(filteredProducts, context, transaction);
                                 rv.setAdapter(recyclerViewAdapter);
+                                if (filteredProducts.size() == 0) {
+                                    noProductsFound.setVisibility(rootView.VISIBLE);
+                                } else {
+                                    noProductsFound.setVisibility(rootView.GONE);
+                                }
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -178,7 +189,7 @@ public class Search extends Fragment {
                         .show();
             }
         });
-
+        loadingProducts.setVisibility(rootView.VISIBLE);
         rv = rootView.findViewById(R.id.recycler_view_search);
         recyclerViewAdapter = new RecyclerViewAdapter(allProducts, context, transaction);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
