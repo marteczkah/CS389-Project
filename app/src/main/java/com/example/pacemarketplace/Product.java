@@ -9,6 +9,7 @@ public class Product {
     public String ImgURI;
     public String productID;
     public String sellerID;
+    public String category;
     public Boolean pNegotiation;
 
     public Product(){
@@ -34,6 +35,18 @@ public class Product {
         this.sellerID = sellerID;
         this.ImgURI = ImgURI;
         this.pNegotiation = pNegotiation;
+    }
+
+    public Product(String name, String price, String description, String productID, String sellerID, String ImgURI,
+                   Boolean pNegotiation, String category) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.productID = productID;
+        this.sellerID = sellerID;
+        this.ImgURI = ImgURI;
+        this.pNegotiation = pNegotiation;
+        this.category = category;
     }
 
     @PropertyName("name")
@@ -93,5 +106,14 @@ public class Product {
 
     public void setpNegotiation(Boolean pNegotiation){
         this.pNegotiation = pNegotiation;
+    }
+
+    @PropertyName("category")
+    public String getCategory() {
+            return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
