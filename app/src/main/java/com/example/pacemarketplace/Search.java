@@ -2,6 +2,7 @@ package com.example.pacemarketplace;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -47,7 +49,7 @@ public class Search extends Fragment {
     RecyclerViewAdapter recyclerViewAdapter;
     RecyclerView rv;
     Dialog filterDialog;
-    Button filters;
+    Button filters, categories;
 
     public TextView productTitle;
 
@@ -71,7 +73,9 @@ public class Search extends Fragment {
         this.setHasOptionsMenu(true);
         final Context context = getContext();
         final ArrayList<Product> allProducts = new ArrayList<>();
+        final ArrayList<Product> filteredProducts = new ArrayList<>();
         transaction = getFragmentManager();
+        categories = (Button) rootView.findViewById(R.id.filter_categories);
         SearchView searchView = rootView.findViewById(R.id.search_menu);
 
         filters = rootView.findViewById(R.id.filters_button);
@@ -112,11 +116,66 @@ public class Search extends Fragment {
                     String sellerID = document.get("sellerID").toString();
                     String getImgURI = document.get("ImgURI").toString();
                     Boolean pNegotiation = (Boolean) document.get("pNegotiation");
-                    Product product = new Product(productName, price, productDescription, productID, sellerID, getImgURI, pNegotiation); //getImgURI
+                    String category = (String) document.get("category");
+                    Product product = new Product(productName, price, productDescription, productID,
+                            sellerID, getImgURI, pNegotiation, category); //getImgURI
                     allProducts.add(product);
                     recyclerViewAdapter = new RecyclerViewAdapter(allProducts, context, transaction);
                     rv.setAdapter(recyclerViewAdapter);
                 }
+            }
+        });
+
+        categories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String[] valuesToPick = new String[] {"All", "Textbooks", "Electronics", "Dorm Supplies",
+                    "Clothes", "School Supplies", "Movies, Music & Games", "Beauty & Health",
+                    "Other"};
+                List<String> checkedValues = new ArrayList<>();
+                new MaterialAlertDialogBuilder(getContext())
+                        .setTitle("Filter by category")
+                        .setPositiveButton("Apply filter", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (checkedValues.size() == 1 && checkedValues.get(0).equals("All")) {
+                                    recyclerViewAdapter = new RecyclerViewAdapter(allProducts, context, transaction);
+                                    rv.setAdapter(recyclerViewAdapter);
+                                    return;
+                                }
+                                for (int i = 0; i < allProducts.size(); i++) {
+                                    for (int m = 0; m < checkedValues.size(); m++) {
+                                        if (allProducts.get(i).getCategory().equals(checkedValues.get(m))) {
+                                            filteredProducts.add(allProducts.get(i));
+                                        }
+                                    }
+                                }
+                                recyclerViewAdapter = new RecyclerViewAdapter(filteredProducts, context, transaction);
+                                rv.setAdapter(recyclerViewAdapter);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setNeutralButton("Reset", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                recyclerViewAdapter = new RecyclerViewAdapter(allProducts, context, transaction);
+                                rv.setAdapter(recyclerViewAdapter);
+                            }
+                        })
+                        .setMultiChoiceItems(valuesToPick, null, new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                if (isChecked) {
+                                    checkedValues.add(valuesToPick[which]);
+                                }
+                            }
+                        })
+                        .show();
             }
         });
 
