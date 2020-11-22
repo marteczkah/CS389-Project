@@ -87,6 +87,11 @@ public class FavoriteProductsPage extends Fragment {
                                         rv.setAdapter(recyclerViewAdapter);
                                     } else {
                                         docRef.update("favorites", FieldValue.arrayRemove(id));
+                                        List<String> newFavoritesID = (List<String>) document.get("favorites");
+                                        if (newFavoritesID.size() == 0) {
+                                            loadingProducts.setVisibility(v.GONE);
+                                            relativeLayout.setVisibility(v.VISIBLE);
+                                        }
                                     }
                                 }
                             });

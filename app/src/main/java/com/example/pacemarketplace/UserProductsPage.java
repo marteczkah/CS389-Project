@@ -99,6 +99,11 @@ public class UserProductsPage extends Fragment {
                                         rv.setAdapter(recyclerViewAdapter);
                                     } else {
                                         docRef.update("userProducts", FieldValue.arrayRemove(id));
+                                        List<String> newFavoritesID = (List<String>) document.get("userProducts");
+                                        if (newFavoritesID.size() == 0) {
+                                            loadingProducts.setVisibility(v.GONE);
+                                            noProducts.setVisibility(v.VISIBLE);
+                                        }
                                     }
                                 }
                             });
