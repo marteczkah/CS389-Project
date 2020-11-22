@@ -22,6 +22,40 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:id="@+id/no_favorite_products"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No products on the favorite list."
+            android:textColor="#000"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textSize="20dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:visibility="gone"
+        android:id="@+id/favorite_page_loading">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loading products..."
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="20dp"
+            android:textColor="#000" />
+
+    </RelativeLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_favorite"
         android:layout_width="match_parent"
