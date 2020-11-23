@@ -40,6 +40,7 @@ import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class AddProductPage extends Fragment {
 
+
     FirebaseAuth fAuth;
     Button addProduct;
     EditText addName;
@@ -54,6 +55,8 @@ public class AddProductPage extends Fragment {
 
     FirebaseFirestore database = FirebaseFirestore.getInstance();
 
+
+    String productNameTest;
     public AddProductPage() {
         //required empty constructor
     }
@@ -96,6 +99,8 @@ public class AddProductPage extends Fragment {
                 String productDescription = addDescription.getText().toString();
                 String category = categorySpinner.getSelectedItem().toString();
                 String fileURI = Fileuploader();
+
+                productNameTest = productName;
 
 
                 final String userID = fAuth.getCurrentUser().getUid();
