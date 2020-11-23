@@ -59,12 +59,6 @@ public class FavoriteProductsPage extends Fragment {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot document = task.getResult();
                 List<String> favoritesID = (List<String>) document.get("favorites");
-//                if (favoritesID.size() == 0) {
-//                    loadingProducts.setVisibility(v.GONE);
-//                    relativeLayout.setVisibility(v.VISIBLE);
-//                } else {
-//                    relativeLayout.setVisibility(v.GONE);
-//                }
                 for (final String id : favoritesID) {
                     database.collection("Products").document(id).get()
                             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -82,23 +76,24 @@ public class FavoriteProductsPage extends Fragment {
                                         Product product = new Product(productName, price, productDescription,
                                                 productID, sellerID, imgUri, pNegotiation);
                                         favoriteProducts.add(product);
-//                                        loadingProducts.setVisibility(v.GONE);
+                                        loadingProducts.setVisibility(v.GONE);
                                         recyclerViewAdapter = new RecyclerViewAdapter(favoriteProducts, context, transaction);
                                         rv.setAdapter(recyclerViewAdapter);
                                     } else {
                                         docRef.update("favorites", FieldValue.arrayRemove(id));
-//                                        List<String> newFavoritesID = (List<String>) document.get("favorites");
-//                                        if (newFavoritesID.size() == 0) {
-//                                            loadingProducts.setVisibility(v.GONE);
-//                                            relativeLayout.setVisibility(v.VISIBLE);
-//                                        }
                                     }
                                 }
                             });
                 }
+                loadingProducts.setVisibility(v.GONE);
+                if (favoritesID.size()==0) {
+                    relativeLayout.setVisibility(v.VISIBLE);
+                } else {
+                    relativeLayout.setVisibility(v.GONE);
+                }
             }
         });
-//        loadingProducts.setVisibility(v.VISIBLE);
+        loadingProducts.setVisibility(v.VISIBLE);
         recyclerViewAdapter = new RecyclerViewAdapter(favoriteProducts, context, transaction);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv.setAdapter(recyclerViewAdapter);
