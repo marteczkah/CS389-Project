@@ -5,18 +5,18 @@
     android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/accountPageTopBar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:menu="@menu/account_page_topbar"
-            app:title="@string/app_name"
-            app:titleTextColor="#FFFFFF" />
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/accountPageTopBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:menu="@menu/account_page_topbar"
+        app:title="@string/app_name"
+        app:titleTextColor="#FFFFFF" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+</com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
