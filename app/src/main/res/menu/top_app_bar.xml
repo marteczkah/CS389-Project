@@ -9,15 +9,15 @@
         android:icon="@drawable/ic_baseline_search_24"
         android:contentDescription="search"
         app:showAsAction="ifRoom"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:actionViewClass="android.widget.SearchView"
         android:iconTint="#FFFFFF" />
 
-    <item
-        android:title="filters"
-        android:id="@+id/filters_menu"
-        android:icon="@drawable/ic_baseline_filter_list_24"
-        android:contentDescription="filters"
-        app:showAsAction="ifRoom"
-        android:iconTint="#FFFFFF" />
+<!--    <item-->
+<!--        android:title="filters"-->
+<!--        android:id="@+id/filters_menu"-->
+<!--        android:icon="@drawable/ic_baseline_filter_list_24"-->
+<!--        android:contentDescription="filters"-->
+<!--        app:showAsAction="ifRoom"-->
+<!--        android:iconTint="#FFFFFF" />-->
 
 </menu>

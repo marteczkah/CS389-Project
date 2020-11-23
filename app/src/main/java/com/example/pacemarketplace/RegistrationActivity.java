@@ -55,10 +55,11 @@ public class RegistrationActivity extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         progressBar = findViewById(R.id.progressBar);
 
-        if(fAuth.getCurrentUser() != null){
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            finish();
-        }
+//        if(fAuth.getCurrentUser() != null){
+//            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+////            finish();
+//            return;
+//        }
 
 
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -110,9 +111,9 @@ public class RegistrationActivity extends AppCompatActivity {
 
 //                            Toast.makeText(RegistrationActivity.this, "User Created.", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-//                            userID = fAuth.getCurrentUser().getUid();
-                            String id = fStore.collection("Users").document().getId();
-                            DocumentReference documentReference = fStore.collection("Users").document(id);
+                            userID = fAuth.getCurrentUser().getUid();
+//                            String id = fStore.collection("Users").document().getId();
+                            DocumentReference documentReference = fStore.collection("Users").document(userID);
                             Map<String,Object> user = new HashMap<>();
                             List<String> favorites = new ArrayList<>();
                             List<String> userProducts = new ArrayList<>();
@@ -121,7 +122,8 @@ public class RegistrationActivity extends AppCompatActivity {
                             user.put("lName", lastName);
                             user.put("favorites", favorites);
                             user.put("userProducts", userProducts);
-                            fStore.collection("Users").document(id).set(user)
+                            user.put("userID", userID);
+                            fStore.collection("Users").document(userID).set(user)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
@@ -144,15 +146,24 @@ public class RegistrationActivity extends AppCompatActivity {
                 });
             }
         });
-
-
-
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(),LoginActivity.class));
             }
         });
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = fAuth.getCurrentUser();
+        updateUI(currentUser);
+    }
+
+    public void updateUI(FirebaseUser currentUser) {
+        if (currentUser != null){
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        }
     }
 }

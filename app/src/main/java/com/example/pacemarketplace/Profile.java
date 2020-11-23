@@ -15,10 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -26,11 +30,6 @@ import java.util.Map;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Profile#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Profile extends Fragment {
 
     private Button addProductPageButton;
@@ -38,48 +37,20 @@ public class Profile extends Fragment {
     private Button accountSettingsButton;
     private Button yourProductsPageButton;
     private Button userLogOut;
+    private TextView helloName;
+    FirebaseAuth fAuth;
+    FirebaseFirestore database;
 
     Context mContext = getContext();
 
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public Profile() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Profile.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Profile newInstance(String param1, String param2) {
-        Profile fragment = new Profile();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -91,7 +62,23 @@ public class Profile extends Fragment {
         accountSettingsButton = (Button) rootView.findViewById(R.id.settingsPageButton);
         yourProductsPageButton = (Button) rootView.findViewById(R.id.yourProductsButton);
         userLogOut = (Button) rootView.findViewById(R.id.logout);
+        helloName = (TextView) rootView.findViewById(R.id.hello_name);
+        fAuth = FirebaseAuth.getInstance();
+        database = FirebaseFirestore.getInstance();
 
+        String userID = fAuth.getUid();
+
+        database.collection("Users").document(userID).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            String userName = document.get("fName").toString();
+                            helloName.setText("Hello " + userName + "!");
+                        }
+                    }
+                });
 
         addProductPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,12 +146,9 @@ public class Profile extends Fragment {
         transaction.commit();
     }
 
-//    public void addProductName(View view){
-//        FirebaseFirestore database = FirebaseFirestore.getInstance();
-//
-//    }
     public void logout() {
         FirebaseAuth.getInstance().signOut();//logout
-        startActivity(new Intent(mContext,LoginActivity.class));
+        mContext = getContext();
+        startActivity(new Intent(mContext, LoginActivity.class));
     }
 }
