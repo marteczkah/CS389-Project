@@ -12,9 +12,9 @@
         tools:layout="@layout/search_page" />
     <fragment
         android:id="@+id/messages"
-        android:name="com.example.pacemarketplace.Messages"
+        android:name="com.example.pacemarketplace.ui.MessageActivity"
         android:label="fragment_messages"
-        tools:layout="@layout/fragment_messages" />
+        tools:layout="@layout/activity_messages" />
     <fragment
         android:id="@+id/profile"
         android:name="com.example.pacemarketplace.Profile"

@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RegistrationActivity extends AppCompatActivity {
-    public static final String TAG = "TAG";
+    public static final String TAG = "RegistrationActivity";
     EditText fName, lName,RegisterEmail,RegisterPassword;
     Button registerButton;
     TextView loginButton;

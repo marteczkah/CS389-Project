@@ -20,4 +20,22 @@
         <item>Beauty &amp; Health</item>
         <item>Other</item>
     </string-array>
+    <!-- Firestore Strings -->
+    <string name="collection_users">Users</string>
+    <string name="collection_chatrooms">Chatrooms</string>
+    <string name="collection_chat_messages">Chat Messages</string>
+    <string name="collection_chatroom_user_list">User List</string>
+
+    <!-- Intent extras -->
+    <string name="intent_chatroom">intent_chatroom</string>
+    <string name="intent_user_list">intent_user_list</string>
+
+    <!-- Fragments Names -->
+    <string name="fragment_user_list">User List</string>
+
+    <!-- Other Strings -->
+    <string name="action_create_chatroom">Create Chatroom</string>
+    <string name="action_leave_chatroom">Leave chatroom</string>
+    <string name="action_chatroom_user_list">User list</string>
+    <string name="action_sign_out">Sign out</string>
 </resources>

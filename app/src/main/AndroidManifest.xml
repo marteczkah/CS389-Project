@@ -21,5 +21,4 @@
         <activity android:name=".MainActivity" android:label="Pace Marketplace"/>
         <activity android:name=".LandingActivity"/>
     </application>
-
 </manifest>
