@@ -71,12 +71,12 @@ public class UserProductsPage extends Fragment {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot document = task.getResult();
                 List<String> favoritesID = (List<String>) document.get("userProducts");
-                if (favoritesID.size() == 0) {
-                    loadingProducts.setVisibility(v.GONE);
-                    noProducts.setVisibility(v.VISIBLE);
-                } else {
-                    noProducts.setVisibility(v.GONE);
-                }
+//                if (favoritesID.size() == 0) {
+//                    loadingProducts.setVisibility(v.GONE);
+//                    noProducts.setVisibility(v.VISIBLE);
+//                } else {
+//                    noProducts.setVisibility(v.GONE);
+//                }
                 for (final String id : favoritesID) {
                     database.collection("Products").document(id).get()
                             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -94,23 +94,23 @@ public class UserProductsPage extends Fragment {
                                         Product product = new Product(productName, price, productDescription,
                                                 productID, sellerID, imgUri, pNegotiation);
                                         userProducts.add(product);
-                                        loadingProducts.setVisibility(v.GONE);
+//                                        loadingProducts.setVisibility(v.GONE);
                                         recyclerViewAdapter = new RecyclerViewAdapter(userProducts, context, transaction);
                                         rv.setAdapter(recyclerViewAdapter);
                                     } else {
                                         docRef.update("userProducts", FieldValue.arrayRemove(id));
-                                        List<String> newFavoritesID = (List<String>) document.get("userProducts");
-                                        if (newFavoritesID.size() == 0) {
-                                            loadingProducts.setVisibility(v.GONE);
-                                            noProducts.setVisibility(v.VISIBLE);
-                                        }
+//                                        List<String> newFavoritesID = (List<String>) document.get("userProducts");
+//                                        if (newFavoritesID.size() == 0) {
+//                                            loadingProducts.setVisibility(v.GONE);
+//                                            noProducts.setVisibility(v.VISIBLE);
+//                                        }
                                     }
                                 }
                             });
                 }
             }
         });
-        loadingProducts.setVisibility(v.VISIBLE);
+//        loadingProducts.setVisibility(v.VISIBLE);
         recyclerViewAdapter = new RecyclerViewAdapter(userProducts, context, transaction);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv.setAdapter(recyclerViewAdapter);
