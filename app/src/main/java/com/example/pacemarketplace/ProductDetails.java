@@ -6,6 +6,7 @@ import java.net.URL;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -176,6 +177,35 @@ public class ProductDetails extends Fragment {
                         }
                     }
                 });
+            }
+        });
+
+        messageSeller.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                database.collection("Users").document(sellerID).get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    String email = document.get("email").toString();
+                                    String mailTo = "mailto:" + email;
+                                    Intent i = new Intent(Intent.ACTION_SEND);
+                                    String subject = name + " - from Pace Marketplace";
+                                    i.setType("message/rfc822");
+                                    i.putExtra(Intent.EXTRA_SUBJECT, subject);
+                                    i.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+//                                    i.setData(Uri.parse(mailTo));
+                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    try {
+                                        startActivity(Intent.createChooser(i, "Choose email..."));
+                                    } catch (android.content.ActivityNotFoundException ex) {
+                                        Toast.makeText(getContext(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        });
             }
         });
 
