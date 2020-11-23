@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -32,6 +34,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -190,6 +193,49 @@ public class AddProductPage extends Fragment {
                                 }
                             });
                 }
+                DocumentReference docRef = database.collection("MaxPrice").document(
+                        "MzJTGdWzHoZ78wa76lnz");
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful())
+                        {
+                            DocumentSnapshot document = task.getResult();
+//                            if (document.exists())
+//                                Log.d(TAG, "onComplete: data:"+document.getData());
+//                            else
+//                                Log.d(TAG, "onComplete: no such doc");
+                            float value = Float.parseFloat(productPrice);
+                            if (value > document.getLong("Max"))
+                            {
+                                docRef.update("Max", value);
+                            }
+                        }
+//                        else
+//                            Log.d(TAG, "onComplete: get failed with ", task.getException());
+
+                    }
+                });
+                DocumentReference min = database.collection("MinPrice").document("7GpvcCeHeI5904qQbuem");
+                min.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful())
+                        {
+                            DocumentSnapshot document = task.getResult();
+//                            if (document.exists())
+//                                Log.d(TAG, "onComplete: data: "+document.getData());
+//                            else
+//                                Log.d(TAG, "onComplete: no such doc ");
+                            float value = Float.parseFloat(productPrice);
+                            if (value <document.getLong("Min"))
+                            {
+                                min.update("Min",value);
+                            }
+
+                        }
+                    }
+                });
 //                Fileuploader();
             }
         });

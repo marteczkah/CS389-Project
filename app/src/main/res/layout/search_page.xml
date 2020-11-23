@@ -30,6 +30,51 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="$0"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:id="@+id/min_price_tv"
+                android:textColor="#000"
+                android:layout_marginLeft="10dp"/>
+
+            <com.google.android.material.slider.RangeSlider
+                android:valueFrom="0.0"
+                android:valueTo="1000.0"
+                android:layout_height="wrap_content"
+                android:layout_width="150dp"
+                android:id="@+id/price_slider"
+                android:layout_toRightOf="@+id/min_price_tv"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/price_slider"
+                android:text="$1000"
+                android:textColor="#000"
+                android:id="@+id/max_price_tv" />
+
+
+            <Button
+                android:id="@+id/apply_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Filter"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -40,35 +85,16 @@
                 android:id="@+id/filter_categories"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
-<!--            <Button-->
-<!--                android:id="@+id/filters_button"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:padding="5dp"-->
-<!--                android:text="Filters"-->
-<!--                android:layout_gravity="end"-->
-<!--                android:layout_marginRight="8dp"-->
-<!--                android:layout_alignParentEnd="true"-->
-<!--                android:layout_alignParentRight="true" />-->
-
-
-            <com.google.android.material.slider.RangeSlider
-                android:valueFrom="0.0"
-                android:valueTo="500.0"
-                android:layout_height="wrap_content"
-                android:layout_width="100dp"
-                app:values="@array/initial_slider_values"
-                android:id="@+id/price_slider"
-                android:layout_toLeftOf="@+id/apply_price"
-                />
-
             <Button
-                android:id="@+id/apply_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Filter"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp" />
+                android:text="Remove Filters"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="10dp"
+                android:id="@+id/button_remove_filters"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:textColor="#DD403A"
+                android:layout_alignParentRight="true" />
 
 
         </RelativeLayout>
@@ -114,7 +140,8 @@
         android:id="@+id/recycler_view_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="110dp">
+        android:layout_marginTop="170dp"
+        android:paddingBottom="50dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 

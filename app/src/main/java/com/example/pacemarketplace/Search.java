@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,7 +42,10 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.Array;
+import java.text.Format;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 
 public class Search extends Fragment {
@@ -51,10 +55,12 @@ public class Search extends Fragment {
     FragmentManager transaction;
     RecyclerViewAdapter recyclerViewAdapter;
     RecyclerView rv;
-    Dialog filterDialog;
-    Button categories, applyPriceFilter;
+    Button categories, applyPriceFilter, removeFilters;
     RelativeLayout loadingProducts, noProductsFound;
     RangeSlider priceSlider;
+    TextView minPriceTV, maxPriceTV;
+    ArrayList<Product> productsToShow = new ArrayList<>();
+    Float minValue = 0.0f, maxValue=1000.0f;
 
     public TextView productTitle;
 
@@ -80,17 +86,39 @@ public class Search extends Fragment {
         final ArrayList<Product> allProducts = new ArrayList<>();
         final ArrayList<Product> filteredProducts = new ArrayList<>();
         transaction = getFragmentManager();
+        //buttons
         categories = (Button) rootView.findViewById(R.id.filter_categories);
         applyPriceFilter = (Button) rootView.findViewById(R.id.apply_price);
+        removeFilters = (Button) rootView.findViewById(R.id.button_remove_filters);
         //relative layouts
         noProductsFound = (RelativeLayout) rootView.findViewById(R.id.search_page_no);
         loadingProducts = (RelativeLayout) rootView.findViewById(R.id.search_page_loading);
         //range slider
         priceSlider = (RangeSlider) rootView.findViewById(R.id.price_slider);
+        priceSlider.setValues(minValue, maxValue);
+        //text views
+        minPriceTV = (TextView) rootView.findViewById(R.id.min_price_tv);
+        maxPriceTV = (TextView) rootView.findViewById(R.id.max_price_tv);
 
         SearchView searchView = rootView.findViewById(R.id.search_menu);
 
         List<Float> sliderValues = priceSlider.getValues();
+
+
+
+        removeFilters.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                priceSlider.setValues(minValue, maxValue);
+                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+                currencyFormat.setCurrency(Currency.getInstance("USD"));
+                minPriceTV.setText(currencyFormat.format(minValue));
+                maxPriceTV.setText(currencyFormat.format(maxValue));
+                noProductsFound.setVisibility(v.GONE);
+                recyclerViewAdapter = new RecyclerViewAdapter(allProducts, context, transaction);
+                rv.setAdapter(recyclerViewAdapter);
+            }
+        });
 
         applyPriceFilter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +143,54 @@ public class Search extends Fragment {
                 rv.setAdapter(recyclerViewAdapter);
             }
         });
+
+        //setting the format of the slider values
+        priceSlider.setLabelFormatter(new LabelFormatter() {
+            @NonNull
+            @Override
+            public String getFormattedValue(float value) {
+                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+                currencyFormat.setCurrency(Currency.getInstance("USD"));
+                return currencyFormat.format(value);
+            }
+        });
+
+        priceSlider.addOnSliderTouchListener(new RangeSlider.OnSliderTouchListener() {
+            @Override
+            public void onStartTrackingTouch(@NonNull RangeSlider slider) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(@NonNull RangeSlider slider) {
+                List<Float> sliderValues = priceSlider.getValues();
+                Float maxV = sliderValues.get(1);
+                Float minV = sliderValues.get(0);
+                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+                currencyFormat.setCurrency(Currency.getInstance("USD"));
+                minPriceTV.setText(currencyFormat.format(minV));
+                maxPriceTV.setText(currencyFormat.format(maxV));
+            }
+        });
+
+        database.collection("MaxPrice").document("MzJTGdWzHoZ78wa76lnz").get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
+                        String max = document.get("Max").toString();
+                        Float newValue = Float.parseFloat(max);
+                        if (newValue > maxValue) {
+                            maxValue = newValue;
+                            priceSlider.setValueTo(newValue);
+                            priceSlider.setValues(0.0f, newValue);
+                            maxPriceTV.setText("$" + newValue);
+                        }
+                    }
+                });
+
+
+
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -148,6 +224,7 @@ public class Search extends Fragment {
                     Product product = new Product(productName, price, productDescription, productID,
                             sellerID, getImgURI, pNegotiation, category); //getImgURI
                     loadingProducts.setVisibility(rootView.GONE);
+                    productsToShow = allProducts;
                     allProducts.add(product);
                     recyclerViewAdapter = new RecyclerViewAdapter(allProducts, context, transaction);
                     rv.setAdapter(recyclerViewAdapter);
@@ -168,6 +245,11 @@ public class Search extends Fragment {
                         .setPositiveButton("Apply filter", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                priceSlider.setValues(minValue, maxValue);
+                                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+                                currencyFormat.setCurrency(Currency.getInstance("USD"));
+                                minPriceTV.setText(currencyFormat.format(minValue));
+                                maxPriceTV.setText(currencyFormat.format(maxValue));
                                 if (checkedValues.size() == 1 && checkedValues.get(0).equals("All")) {
                                     recyclerViewAdapter = new RecyclerViewAdapter(allProducts, context, transaction);
                                     rv.setAdapter(recyclerViewAdapter);
@@ -198,6 +280,11 @@ public class Search extends Fragment {
                         .setNeutralButton("Reset", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                priceSlider.setValues(minValue, maxValue);
+                                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+                                currencyFormat.setCurrency(Currency.getInstance("USD"));
+                                minPriceTV.setText(currencyFormat.format(minValue));
+                                maxPriceTV.setText(currencyFormat.format(maxValue));
                                 recyclerViewAdapter = new RecyclerViewAdapter(allProducts, context, transaction);
                                 rv.setAdapter(recyclerViewAdapter);
                             }
