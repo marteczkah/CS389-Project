@@ -94,12 +94,17 @@ public class UserProductsPage extends Fragment {
                                     } else {
                                         docRef.update("userProducts", FieldValue.arrayRemove(id));
                                         favoritesID.remove(id);
+                                        if (favoritesID.isEmpty()) {
+                                            noProducts.setVisibility(v.VISIBLE);
+                                        } else {
+                                            noProducts.setVisibility(v.GONE);
+                                        }
                                     }
                                 }
                             });
                 }
                 loadingProducts.setVisibility(v.GONE);
-                if (favoritesID.size()==0) {
+                if (favoritesID.isEmpty()) {
                     noProducts.setVisibility(v.VISIBLE);
                 } else {
                     noProducts.setVisibility(v.GONE);
