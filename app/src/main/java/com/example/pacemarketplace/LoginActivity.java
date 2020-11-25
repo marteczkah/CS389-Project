@@ -19,13 +19,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
     EditText loginEmail,loginPassword;
-    Button LoginButton;
-    TextView mCreateBtn,forgotTextLink;
+    Button LoginButton, resendEmail;
+    TextView mCreateBtn,forgotTextLink, needVerification;
     ProgressBar progressBar;
     FirebaseAuth fAuth;
 
@@ -42,6 +44,27 @@ public class LoginActivity extends AppCompatActivity {
         LoginButton = findViewById(R.id.LoginButton);
         mCreateBtn = findViewById(R.id.createText);
         forgotTextLink = findViewById(R.id.forgotPassword);
+        needVerification = (TextView) findViewById(R.id.need_verification_text);
+        resendEmail = (Button) findViewById(R.id.resend_verification_button);
+
+        resendEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseUser user = fAuth.getCurrentUser();
+                user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Snackbar.make(resendEmail, "Verification email sent.", Snackbar.LENGTH_SHORT)
+                                    .show();
+                        } else {
+                            Snackbar.make(resendEmail, "Failed to send verification email.", Snackbar.LENGTH_SHORT)
+                                    .show();
+                        }
+                    }
+                });
+            }
+        });
 
 
         LoginButton.setOnClickListener(new View.OnClickListener() {
@@ -74,8 +97,15 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            Toast.makeText(LoginActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            FirebaseUser user = fAuth.getCurrentUser();
+                            if (user.isEmailVerified()) {
+                                Toast.makeText(LoginActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            } else {
+                                needVerification.setVisibility(View.VISIBLE);
+                                resendEmail.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.GONE);
+                            }
                         }else {
                             Toast.makeText(LoginActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.GONE);

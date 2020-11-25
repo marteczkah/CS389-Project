@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -32,13 +33,13 @@ import com.google.firebase.storage.StorageReference;
 import javax.annotation.Nullable;
 
 public class LandingActivity extends AppCompatActivity {
-    private static final int GALLERY_INTENT_CODE = 1023 ;
-    TextView firstName,lastName, email,verifyMsg;
+    private static final int GALLERY_INTENT_CODE = 1023;
+    TextView firstName, lastName, email, verifyMsg;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userId;
-    Button resendCode;
-    Button resetPassLocal,changeProfileImage;
+    Button resendCode, reloadPage;
+    Button resetPassLocal, changeProfileImage;
     FirebaseUser user;
     ImageView profileImage;
     StorageReference storageReference;
@@ -48,38 +49,21 @@ public class LandingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
-        firstName = findViewById(R.id.profileName);
-        lastName = findViewById(R.id.lastName);
-        email    = findViewById(R.id.profileEmail);
-        resetPassLocal = findViewById(R.id.resetPasswordLocal);
-
-        profileImage = findViewById(R.id.profileImage);
-        changeProfileImage = findViewById(R.id.changeProfile);
 
 
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference();
+//        fAuth = FirebaseAuth.getInstance();
+//        fStore = FirebaseFirestore.getInstance();
+//        storageReference = FirebaseStorage.getInstance().getReference();
+//        reloadPage = (Button) findViewById(R.id.reload_page);
+//
+//        resendCode = findViewById(R.id.resendCode);
+//        verifyMsg = findViewById(R.id.verifyMsg);
+//
+//
+//        userId = fAuth.getCurrentUser().getUid();
+//        user = fAuth.getCurrentUser();
 
-       /* StorageReference profileRef = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/profile.jpg");
-        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(profileImage);
-            }
-        });*/
-
-        resendCode = findViewById(R.id.resendCode);
-        verifyMsg = findViewById(R.id.verifyMsg);
-
-
-        userId = fAuth.getCurrentUser().getUid();
-        user = fAuth.getCurrentUser();
-
-        if(!user.isEmailVerified()){
-            verifyMsg.setVisibility(View.VISIBLE);
-            resendCode.setVisibility(View.VISIBLE);
-
+        if (!user.isEmailVerified()) {
             resendCode.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
@@ -87,105 +71,37 @@ public class LandingActivity extends AppCompatActivity {
                     user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(v.getContext(), "Verification Email Has been Sent.", Toast.LENGTH_SHORT).show();
-                        }
+                            Snackbar.make(resendCode, "Verification Email Has been Sent.", Snackbar.LENGTH_SHORT)
+                                    .show();                        }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.d("tag", "onFailure: Email not sent " + e.getMessage());
+                            Snackbar.make(resendCode, "Verification Email not sent.", Snackbar.LENGTH_SHORT)
+                                    .show();
                         }
                     });
                 }
             });
         }
 
-
-
-
-        DocumentReference documentReference = fStore.collection("Users").document(userId);
-        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if(documentSnapshot.exists()){
-                    firstName.setText(documentSnapshot.getString("fName"));
-                    lastName.setText(documentSnapshot.getString("lName"));
-                    email.setText(documentSnapshot.getString("email"));
-
-                }else {
-                    Log.d("tag", "onEvent: Document do not exists");
-                }
-            }
-        });
-
-
-        resetPassLocal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                final EditText resetPassword = new EditText(v.getContext());
-
-                final AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(v.getContext());
-                passwordResetDialog.setTitle("Reset Password ?");
-                passwordResetDialog.setMessage("Enter New Password > 6 Characters long.");
-                passwordResetDialog.setView(resetPassword);
-
-                passwordResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // extract the email and send reset link
-                        String newPassword = resetPassword.getText().toString();
-                        user.updatePassword(newPassword).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(LandingActivity.this, "Password Reset Successfully.", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(LandingActivity.this, "Password Reset Failed.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                });
-
-                passwordResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // close
-                    }
-                });
-
-                passwordResetDialog.create().show();
-
-            }
-        });
-
-        /*changeProfileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // open gallery
-                Intent i = new Intent(v.getContext(),EditProfile.class);
-                i.putExtra("firstName",firstName.getText().toString());
-                i.putExtra("email",email.getText().toString());
-                i.putExtra("lastName",lastName.getText().toString());
-                startActivity(i);
-//
-
-            }*/
-        // });
-
+//        reloadPage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (fAuth.getCurrentUser().isEmailVerified()) {
+//                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                } else {
+//                    Snackbar.make(resendCode, "Account not verified", Snackbar.LENGTH_SHORT)
+//                            .show();
+//                }
+//            }
+//        });
 
     }
-
-
-
 
     public void logout(View view) {
         FirebaseAuth.getInstance().signOut();//logout
-        startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
         finish();
     }
-
-
-}//}
+}
 //credit to small academy and medium corporation - I followed along with their videos and articles

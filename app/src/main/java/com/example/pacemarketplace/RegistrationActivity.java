@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -55,13 +56,6 @@ public class RegistrationActivity extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         progressBar = findViewById(R.id.progressBar);
 
-//        if(fAuth.getCurrentUser() != null){
-//            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-////            finish();
-//            return;
-//        }
-
-
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +76,10 @@ public class RegistrationActivity extends AppCompatActivity {
 
                 if(password.length() < 6){
                     RegisterPassword.setError("Password Must be >= 6 Characters");
+                    return;
+                }
+                if (!email.endsWith("@pace.edu")) {
+                    RegisterEmail.setError("You have to use Pace email to create an account.");
                     return;
                 }
 
@@ -163,7 +161,12 @@ public class RegistrationActivity extends AppCompatActivity {
 
     public void updateUI(FirebaseUser currentUser) {
         if (currentUser != null){
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            if (currentUser.isEmailVerified()) {
+                Snackbar.make(registerButton, "Account verified", Snackbar.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            } else {
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            }
         }
     }
 }

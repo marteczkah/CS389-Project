@@ -81,6 +81,7 @@ public class FavoriteProductsPage extends Fragment {
                                         rv.setAdapter(recyclerViewAdapter);
                                     } else {
                                         docRef.update("favorites", FieldValue.arrayRemove(id));
+                                        favoritesID.remove(id);
                                     }
                                 }
                             });
