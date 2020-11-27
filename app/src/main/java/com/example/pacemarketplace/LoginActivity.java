@@ -132,6 +132,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 final EditText resetMail = new EditText(v.getContext());
+                resetMail.setHint("Email");
                 final AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(v.getContext());
                 passwordResetDialog.setTitle("Reset Password ?");
                 passwordResetDialog.setMessage("Enter Your Email To Received Reset Link.");
@@ -142,18 +143,23 @@ public class LoginActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // extract the email and send reset link
                         String mail = resetMail.getText().toString();
-                        fAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(LoginActivity.this, "Reset Link Sent To Your Email.", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(LoginActivity.this, "Error ! Reset Link is Not Sent" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
+                        if (mail.length() != 0) {
+                            fAuth.sendPasswordResetEmail(mail).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Snackbar.make(LoginButton, "Reset Link Sent To Your Email.",
+                                                Snackbar.LENGTH_SHORT).show();
+                                    } else {
+                                        Snackbar.make(LoginButton, "Error ! Reset Link is Not Sent",
+                                                Snackbar.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        } else {
+                            Snackbar.make(LoginButton, "You need to enter your email!", Snackbar.LENGTH_SHORT)
+                                    .show();
+                        }
                     }
                 });
 
