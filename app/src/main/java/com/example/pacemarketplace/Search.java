@@ -42,6 +42,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.Array;
+import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -110,7 +111,7 @@ public class Search extends Fragment {
             @Override
             public void onClick(View v) {
                 priceSlider.setValues(minValue, maxValue);
-                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+                DecimalFormat currencyFormat = new DecimalFormat("$0.00");
                 currencyFormat.setCurrency(Currency.getInstance("USD"));
                 minPriceTV.setText(currencyFormat.format(minValue));
                 maxPriceTV.setText(currencyFormat.format(maxValue));
@@ -149,8 +150,7 @@ public class Search extends Fragment {
             @NonNull
             @Override
             public String getFormattedValue(float value) {
-                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
-                currencyFormat.setCurrency(Currency.getInstance("USD"));
+                DecimalFormat currencyFormat = new DecimalFormat("$0.00");
                 return currencyFormat.format(value);
             }
         });
@@ -166,8 +166,7 @@ public class Search extends Fragment {
                 List<Float> sliderValues = priceSlider.getValues();
                 Float maxV = sliderValues.get(1);
                 Float minV = sliderValues.get(0);
-                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
-                currencyFormat.setCurrency(Currency.getInstance("USD"));
+                DecimalFormat currencyFormat = new DecimalFormat("$0.00");
                 minPriceTV.setText(currencyFormat.format(minV));
                 maxPriceTV.setText(currencyFormat.format(maxV));
             }

@@ -45,7 +45,7 @@
                 android:valueFrom="0.0"
                 android:valueTo="1000.0"
                 android:layout_height="wrap_content"
-                android:layout_width="150dp"
+                android:layout_width="125dp"
                 android:id="@+id/price_slider"
                 android:layout_toRightOf="@+id/min_price_tv"
                 />
@@ -55,6 +55,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/price_slider"
+                android:layout_toLeftOf="@+id/apply_price"
+                android:ellipsize="end"
                 android:text="$1000"
                 android:textColor="#000"
                 android:id="@+id/max_price_tv" />
