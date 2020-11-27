@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -28,6 +29,7 @@ public class SettingsPage extends Fragment {
     TextView dontMatch, tooShort;
     LinearLayout showPasswordChange;
     FirebaseAuth firebaseAuth;
+    TextInputLayout newPasswordL, confirmPasswordL, currentPasswordL;
 
     public SettingsPage() {
         //required empty constructor
@@ -49,6 +51,11 @@ public class SettingsPage extends Fragment {
         //linear layout
         showPasswordChange = v.findViewById(R.id.layout_change_password);
         firebaseAuth = FirebaseAuth.getInstance();
+        //text input layout
+        currentPasswordL = (TextInputLayout) v.findViewById(R.id.layout_current_password);
+        newPasswordL = (TextInputLayout) v.findViewById(R.id.layout_new_password);
+        confirmPasswordL = (TextInputLayout) v.findViewById(R.id.layout_confirm_password);
+
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
         showLayout.setOnClickListener(new View.OnClickListener() {
@@ -62,46 +69,62 @@ public class SettingsPage extends Fragment {
             @Override
             public void onClick(View v) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                String currentP = curentPassword.getText().toString();
                 String newP = newPassword.getText().toString();
                 String confirmNewP = confirmPassword.getText().toString();
                 tooShort.setVisibility(v.GONE);
                 dontMatch.setVisibility(v.GONE);
                 String email = user.getEmail();
-                AuthCredential credential = EmailAuthProvider.getCredential(email, currentP);
 
-                user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            if (newP.equals(confirmNewP) && newP.length() > 5) {
-                                user.updatePassword(newP).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Snackbar.make(showPasswordChange, "Password changed",
-                                                    Snackbar.LENGTH_SHORT).show();
-                                        } else {
-                                            Snackbar.make(showPasswordChange, "Couldn't change password",
-                                                    Snackbar.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                            } else if (!newP.equals(confirmNewP) && newP.length() <= 5){
-                                tooShort.setVisibility(v.VISIBLE);
-                                dontMatch.setVisibility(v.VISIBLE);
-                            } else if (newP.length() <= 5) {
-                                tooShort.setVisibility(v.VISIBLE);
-                            } else if (!newP.equals(confirmNewP)) {
-                                dontMatch.setVisibility(v.VISIBLE);
-                            }
-                        } else {
-                            Snackbar.make(showPasswordChange, "Couldn't authenticate user.",
-                                    Snackbar.LENGTH_SHORT).show();
-                        }
-
+                if (curentPassword.getText().toString().length() != 0) {
+                    if (currentPasswordL.isErrorEnabled()) {
+                        currentPasswordL.setError(null);
                     }
-                });
+                    if (newPasswordL.isErrorEnabled()) {
+                        newPasswordL.setError(null);
+                    }
+                    if (confirmPasswordL.isErrorEnabled()) {
+                        confirmPasswordL.setError(null);
+                    }
+                    String currentP = curentPassword.getText().toString();
+                    AuthCredential credential = EmailAuthProvider.getCredential(email, currentP);
+                    user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                if (newP.equals(confirmNewP) && newP.length() > 5 ) {
+                                    user.updatePassword(newP).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Snackbar.make(showPasswordChange, "Password changed",
+                                                        Snackbar.LENGTH_SHORT).show();
+                                                curentPassword.setText("");
+                                                newPassword.setText("");
+                                                confirmPassword.setText("");
+                                                curentPassword.clearFocus();
+                                                newPassword.clearFocus();
+                                                confirmPassword.clearFocus();
+                                            } else {
+                                                Snackbar.make(showPasswordChange, "Couldn't change password",
+                                                        Snackbar.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                                } else if (newP.length() <= 5) {
+                                    newPasswordL.setError("Password has to be more than 5 signs!");
+                                } else if (!newP.equals(confirmNewP)) {
+                                    confirmPasswordL.setError("Passwords don't match!");
+                                }
+                            } else {
+                                Snackbar.make(showPasswordChange, "Couldn't authenticate user.",
+                                        Snackbar.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } else {
+                    currentPasswordL.setError("You need to enter current password!");
+                    return;
+                }
             }
         });
 

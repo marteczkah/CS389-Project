@@ -71,6 +71,8 @@
                     android:layout_marginRight="8dp"
                     android:hint="Current Password"
                     android:layout_marginTop="5dp"
+                    app:errorEnabled="true"
+                    android:id="@+id/layout_current_password"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -88,6 +90,8 @@
                     android:layout_marginRight="8dp"
                     android:hint="New Password"
                     android:layout_marginTop="5dp"
+                    app:errorEnabled="true"
+                    android:id="@+id/layout_new_password"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -106,6 +110,8 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginTop="8dp"
                     android:hint="Confirm New Password"
+                    app:errorEnabled="true"
+                    android:id="@+id/layout_confirm_password"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
