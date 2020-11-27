@@ -75,16 +75,19 @@ public class LoginActivity extends AppCompatActivity {
                 String password = loginPassword.getText().toString().trim();
 
                 if(TextUtils.isEmpty(email)){
+                    loginEmail.requestFocus();
                     loginEmail.setError("Email is Required.");
                     return;
                 }
 
                 if(TextUtils.isEmpty(password)){
+                    loginPassword.requestFocus();
                     loginPassword.setError("Password is Required.");
                     return;
                 }
 
                 if(password.length() < 6){
+                    loginPassword.requestFocus();
                     loginPassword.setError("Password Must be >= 6 Characters");
                     return;
                 }

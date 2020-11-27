@@ -47,7 +47,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         fName   = findViewById(R.id.firstName);
         lName = findViewById(R.id.lastName);
-        RegisterEmail      = findViewById(R.id.Email);
+        RegisterEmail      = findViewById(R.id.registration_email);
         RegisterPassword   = findViewById(R.id.password);
         registerButton = findViewById(R.id.NewMemberButton);
         loginButton   = findViewById(R.id.createText);
@@ -64,22 +64,39 @@ public class RegistrationActivity extends AppCompatActivity {
                 final String firstName = fName.getText().toString();
                 final String lastName    = lName.getText().toString();
 
+                if (TextUtils.isEmpty(firstName)){
+                    fName.requestFocus();
+                    fName.setError("First Name is required.");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(lastName)) {
+                    lName.requestFocus();
+                    lName.setError("Last name is required.");
+                    return;
+                }
+
                 if(TextUtils.isEmpty(email)){
+                    RegisterEmail.requestFocus();
                    RegisterEmail.setError("Email is Required.");
                     return;
                 }
 
+                if (!email.endsWith("@pace.edu")) {
+                    RegisterEmail.requestFocus();
+                    RegisterEmail.setError("You have to use Pace email to create an account.");
+                    return;
+                }
+
                 if(TextUtils.isEmpty(password)){
+                    RegisterPassword.requestFocus();
                     RegisterPassword.setError("Password is Required.");
                     return;
                 }
 
                 if(password.length() < 6){
+                    RegisterPassword.requestFocus();
                     RegisterPassword.setError("Password Must be >= 6 Characters");
-                    return;
-                }
-                if (!email.endsWith("@pace.edu")) {
-                    RegisterEmail.setError("You have to use Pace email to create an account.");
                     return;
                 }
 
