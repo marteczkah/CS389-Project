@@ -104,7 +104,6 @@ public class AddProductPage extends Fragment {
             @Override
             public void onClick(View view) {
                 Filechooser();
-                photoAdded = true;
             }
         });
 
@@ -289,6 +288,7 @@ public class AddProductPage extends Fragment {
             imguri=data.getData();
             img.setImageURI(imguri);
             img.setVisibility(getView().VISIBLE);
+            photoAdded = true;
         }
     }
 
