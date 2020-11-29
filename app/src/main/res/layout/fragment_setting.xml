@@ -157,7 +157,8 @@
                 android:text="Thank you for using our app!"
                 android:layout_gravity="center_horizontal"
                 android:textSize="25dp"
-                android:layout_marginTop="40dp"/>
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="150dp"/>
 
         </LinearLayout>
 
