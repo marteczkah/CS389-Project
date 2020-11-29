@@ -150,6 +150,7 @@ public class AddProductPage extends Fragment {
                 String fileURI = "";
                 if (!photoAdded) {
                     imageWarning.setVisibility(v.VISIBLE);
+                    hasImage = false;
                 } else {
                     imageWarning.setVisibility(v.GONE);
                     fileURI = Fileuploader();

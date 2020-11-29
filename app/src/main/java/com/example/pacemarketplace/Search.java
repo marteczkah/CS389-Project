@@ -245,8 +245,7 @@ public class Search extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 priceSlider.setValues(minValue, maxValue);
-                                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
-                                currencyFormat.setCurrency(Currency.getInstance("USD"));
+                                DecimalFormat currencyFormat = new DecimalFormat("$0.00");
                                 minPriceTV.setText(currencyFormat.format(minValue));
                                 maxPriceTV.setText(currencyFormat.format(maxValue));
                                 if (checkedValues.size() == 1 && checkedValues.get(0).equals("All")) {
@@ -280,8 +279,7 @@ public class Search extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 priceSlider.setValues(minValue, maxValue);
-                                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
-                                currencyFormat.setCurrency(Currency.getInstance("USD"));
+                                DecimalFormat currencyFormat = new DecimalFormat("$0.00");
                                 minPriceTV.setText(currencyFormat.format(minValue));
                                 maxPriceTV.setText(currencyFormat.format(maxValue));
                                 recyclerViewAdapter = new RecyclerViewAdapter(allProducts, context, transaction);

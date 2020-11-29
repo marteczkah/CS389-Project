@@ -16,26 +16,26 @@ public class Product {
         //empty constructor needed
     }
 
-    public Product(String name, String price, String description, String productID, String sellerID) {
-        this.name = name;
-        this.price = price;
-        this.description = description;
-        this.productID = productID;
-        this.sellerID = sellerID;
-        this.ImgURI = ImgURI;
-    }
-
-
-    public Product(String name, String price, String description, String productID, String sellerID, String ImgURI,
-                   Boolean pNegotiation) {
-        this.name = name;
-        this.price = price;
-        this.description = description;
-        this.productID = productID;
-        this.sellerID = sellerID;
-        this.ImgURI = ImgURI;
-        this.pNegotiation = pNegotiation;
-    }
+//    public Product(String name, String price, String description, String productID, String sellerID) {
+//        this.name = name;
+//        this.price = price;
+//        this.description = description;
+//        this.productID = productID;
+//        this.sellerID = sellerID;
+//        this.ImgURI = ImgURI;
+//    }
+//
+//
+//    public Product(String name, String price, String description, String productID, String sellerID, String ImgURI,
+//                   Boolean pNegotiation) {
+//        this.name = name;
+//        this.price = price;
+//        this.description = description;
+//        this.productID = productID;
+//        this.sellerID = sellerID;
+//        this.ImgURI = ImgURI;
+//        this.pNegotiation = pNegotiation;
+//    }
 
     public Product(String name, String price, String description, String productID, String sellerID, String ImgURI,
                    Boolean pNegotiation, String category) {

@@ -70,7 +70,7 @@ import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class ProductDetails extends Fragment {
 
-    String name, description, price, productID, sellerID, imgUrl;
+    String name, description, price, productID, sellerID, imgUrl, category = "Other";
     TextView product_name, product_description, product_price, price_negotiation;
     Button messageSeller, edit, productSold;
     ImageButton addFavorite;
@@ -86,7 +86,7 @@ public class ProductDetails extends Fragment {
     }
 
     public ProductDetails(String name, String description, String price, String productID,
-                          String sellerID, String imgUrl, Boolean pNegotiation){
+                          String sellerID, String imgUrl, Boolean pNegotiation, String category){
         this.name = name;
         this.description = description;
         this.price = price;
@@ -94,7 +94,10 @@ public class ProductDetails extends Fragment {
         this.sellerID = sellerID;
         this.imgUrl = imgUrl;
         this.pNegotiation = pNegotiation;
+        this.category = category;
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -168,11 +171,9 @@ public class ProductDetails extends Fragment {
                         List<String> favoritesList = (List<String>) document.get("favorites");
                         if (favoritesList.contains(productID)) {
                             docRef.update("favorites", FieldValue.arrayRemove(productID));
-//                            addFavorite.setText("Add to Favorites");
                             addFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favourite_outlined_24dp));
                         } else {
                             docRef.update("favorites", FieldValue.arrayUnion(productID));
-//                            addFavorite.setText("Remove from Favorites");
                             addFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favourite_filled_24dp));
                         }
                     }
@@ -284,6 +285,7 @@ public class ProductDetails extends Fragment {
                                 soldProduct.put("description", description);
                                 soldProduct.put("price", price);
                                 soldProduct.put("date", currentTime);
+                                soldProduct.put("category", category);
                                 database = FirebaseFirestore.getInstance();
                                 String id = database.collection("SoldProducts").document().getId();
                                 database.collection("SoldProducts").document(id).set(soldProduct)

@@ -57,8 +57,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 String getSellerID = product.getSellerID();
                 String getImgUri = product.getImgURI();
                 Boolean getpNegotiation = product.getpNegotiation();
+                String category = product.getCategory();
 
-                ProductDetails pd = new ProductDetails(getName, getDescription, getPrice, getProductID, getSellerID, getImgUri, getpNegotiation);
+                ProductDetails pd = new ProductDetails(getName, getDescription, getPrice, getProductID, getSellerID, getImgUri, getpNegotiation, category);
                 FragmentTransaction fragmentTransaction = transaction.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment, pd);
                 fragmentTransaction.commit();
