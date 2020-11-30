@@ -104,7 +104,8 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser user = fAuth.getCurrentUser();
                             if (user.isEmailVerified()) {
                                 Toast.makeText(LoginActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class).putExtra("activity", "login");
+                                startActivity(intent);
                             } else {
                                 needVerification.setVisibility(View.VISIBLE);
                                 resendEmail.setVisibility(View.VISIBLE);
@@ -124,7 +125,8 @@ public class LoginActivity extends AppCompatActivity {
         mCreateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),RegistrationActivity.class));
+                Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class).putExtra("activity", "login");
+                startActivity(intent);
             }
         });
 

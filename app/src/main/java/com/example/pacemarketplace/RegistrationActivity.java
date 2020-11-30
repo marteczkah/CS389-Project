@@ -125,7 +125,8 @@ public class RegistrationActivity extends AppCompatActivity {
                             });
 
 //                            Toast.makeText(RegistrationActivity.this, "User Created.", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class).putExtra("activity", "registration");
+                            startActivity(intent);
                             userID = fAuth.getCurrentUser().getUid();
 //                            String id = fStore.collection("Users").document().getId();
                             DocumentReference documentReference = fStore.collection("Users").document(userID);
@@ -164,7 +165,8 @@ public class RegistrationActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class).putExtra("activity", "registration");
+                startActivity(intent);
             }
         });
     }
@@ -179,10 +181,11 @@ public class RegistrationActivity extends AppCompatActivity {
     public void updateUI(FirebaseUser currentUser) {
         if (currentUser != null){
             if (currentUser.isEmailVerified()) {
-                Snackbar.make(registerButton, "Account verified", Snackbar.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class).putExtra("activity", "registration");
+                startActivity(intent);
             } else {
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class).putExtra("activity", "registration");
+                startActivity(intent);
             }
         }
     }
