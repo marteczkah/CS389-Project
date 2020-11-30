@@ -12,8 +12,6 @@
 # Description 
 Pace Marketplace is an application designed to connect university students who are looking to buy or sell their items locally on campus. The app allows the students to make profiles, list their items, browse items other users have listed, and message potential buyers/sellers. 
 
-# Idea Proposal 
-
 # [Product Backlog](https://docs.google.com/spreadsheets/d/1TU0QG7lv1inebz1vsVjxSmCy8pCcB7wlb-tCqlgGMlA/edit#gid=0)
 
 # Sprint Backlogs
