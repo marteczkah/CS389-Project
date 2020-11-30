@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -176,5 +177,16 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = getIntent();
+        String previous = intent.getStringExtra("activity");
+        if (previous.equals("main")) {
+            //users can't use the back button if they just logged out from the app
+        } else {
+            super.onBackPressed();
+        }
     }
 }
