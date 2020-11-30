@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -115,7 +116,7 @@ public class AddProductPage extends Fragment {
                         hasImage=true;
                 String productName = addName.getText().toString();
                 //checking if user added product name
-                if (productName.equals("")) {
+                if (TextUtils.isEmpty(productName)) {
                     nameWarning.setVisibility(v.VISIBLE);
                     hasName = false;
                 } else {
@@ -123,7 +124,7 @@ public class AddProductPage extends Fragment {
                 }
                 String productPrice = addPrice.getText().toString();
                 //checking if user added product price
-                if (productPrice.equals("")) {
+                if (TextUtils.isEmpty(productPrice)) {
                     priceWarning.setVisibility(v.VISIBLE);
                     hasPrice = false;
                 } else {
@@ -131,7 +132,7 @@ public class AddProductPage extends Fragment {
                 }
                 String productDescription = addDescription.getText().toString();
                 //checking if user added product description
-                if (productDescription.equals("")) {
+                if (TextUtils.isEmpty(productDescription)) {
                     descriptionWarning.setVisibility(v.VISIBLE);
                     hasDescription = false;
                 } else {
@@ -139,7 +140,7 @@ public class AddProductPage extends Fragment {
                 }
                 String category = editTextFilledExposedDropdown.getText().toString();
                 //checking if user added product category
-                if (category.equals("")) {
+                if (TextUtils.isEmpty(category)) {
                     categoryWarning.setVisibility(v.VISIBLE);
                     hasCategory = false;
                 } else {
@@ -192,50 +193,50 @@ public class AddProductPage extends Fragment {
                                             Snackbar.LENGTH_SHORT).show();
                                 }
                             });
-                }
-                DocumentReference docRef = database.collection("MaxPrice").document(
-                        "MzJTGdWzHoZ78wa76lnz");
-                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful())
-                        {
-                            DocumentSnapshot document = task.getResult();
+                    DocumentReference docRef = database.collection("MaxPrice").document(
+                            "MzJTGdWzHoZ78wa76lnz");
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful())
+                            {
+                                DocumentSnapshot document = task.getResult();
 //                            if (document.exists())
 //                                Log.d(TAG, "onComplete: data:"+document.getData());
 //                            else
 //                                Log.d(TAG, "onComplete: no such doc");
-                            float value = Float.parseFloat(productPrice);
-                            if (value > document.getLong("Max"))
-                            {
-                                docRef.update("Max", value);
+                                float value = Float.parseFloat(productPrice);
+                                if (value > document.getLong("Max"))
+                                {
+                                    docRef.update("Max", value);
+                                }
                             }
-                        }
 //                        else
 //                            Log.d(TAG, "onComplete: get failed with ", task.getException());
 
-                    }
-                });
-                DocumentReference min = database.collection("MinPrice").document("7GpvcCeHeI5904qQbuem");
-                min.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful())
-                        {
-                            DocumentSnapshot document = task.getResult();
+                        }
+                    });
+                    DocumentReference min = database.collection("MinPrice").document("7GpvcCeHeI5904qQbuem");
+                    min.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful())
+                            {
+                                DocumentSnapshot document = task.getResult();
 //                            if (document.exists())
 //                                Log.d(TAG, "onComplete: data: "+document.getData());
 //                            else
 //                                Log.d(TAG, "onComplete: no such doc ");
-                            float value = Float.parseFloat(productPrice);
-                            if (value <document.getLong("Min"))
-                            {
-                                min.update("Min",value);
-                            }
+                                float value = Float.parseFloat(productPrice);
+                                if (value <document.getLong("Min"))
+                                {
+                                    min.update("Min",value);
+                                }
 
+                            }
                         }
-                    }
-                });
+                    });
+                }
 //                Fileuploader();
             }
         });
