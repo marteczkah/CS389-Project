@@ -63,6 +63,7 @@ public class UserProductsPage extends Fragment {
                 FragmentManager transaction = getFragmentManager();
                 FragmentTransaction fragmentTransaction = transaction.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment, ap);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });

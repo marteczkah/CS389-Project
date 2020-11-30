@@ -183,6 +183,7 @@ public class AddProductPage extends Fragment {
                                     Search sp = new Search();
                                     FragmentTransaction transaction = fragmentManager.beginTransaction();
                                     transaction.replace(R.id.fragment, sp);
+                                    transaction.addToBackStack(null);
                                     transaction.commit();
                                 }
                             })

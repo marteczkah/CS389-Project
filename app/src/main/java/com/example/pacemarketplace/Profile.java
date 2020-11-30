@@ -122,6 +122,7 @@ public class Profile extends Fragment {
         AddProductPage s = new AddProductPage();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment, s);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -129,6 +130,7 @@ public class Profile extends Fragment {
         FavoriteProductsPage s = new FavoriteProductsPage();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment, s);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -136,6 +138,7 @@ public class Profile extends Fragment {
         SettingsPage s = new SettingsPage();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment, s);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -143,6 +146,7 @@ public class Profile extends Fragment {
         UserProductsPage s = new UserProductsPage();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment, s);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 

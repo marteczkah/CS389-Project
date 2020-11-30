@@ -260,6 +260,7 @@ public class ProductDetails extends Fragment {
                 FragmentManager transaction = getFragmentManager();
                 FragmentTransaction fragmentTransaction = transaction.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment, ep);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
@@ -312,6 +313,7 @@ public class ProductDetails extends Fragment {
                                                 FragmentManager transaction = getFragmentManager();
                                                 FragmentTransaction fragmentTransaction = transaction.beginTransaction();
                                                 fragmentTransaction.replace(R.id.fragment, sp);
+                                                fragmentTransaction.addToBackStack(null);
                                                 fragmentTransaction.commit();
                                             }
                                         })

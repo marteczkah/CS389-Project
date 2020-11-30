@@ -168,6 +168,7 @@ public class EditProduct extends Fragment {
                 FragmentManager transaction = getFragmentManager();
                 FragmentTransaction fragmentTransaction = transaction.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment, sp);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });

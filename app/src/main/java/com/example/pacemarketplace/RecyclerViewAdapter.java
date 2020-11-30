@@ -62,6 +62,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 ProductDetails pd = new ProductDetails(getName, getDescription, getPrice, getProductID, getSellerID, getImgUri, getpNegotiation, category);
                 FragmentTransaction fragmentTransaction = transaction.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment, pd);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
