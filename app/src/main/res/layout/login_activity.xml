@@ -41,11 +41,11 @@
         android:layout_height="wrap_content"
         android:text="Email not verified! Verify your email and try again!"
         android:textColor="#C2185B"
-        app:layout_constraintBottom_toTopOf="@+id/LoginEmail"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.162"
+        app:layout_constraintTop_toBottomOf="@+id/resend_verification_button"
+        app:layout_constraintVertical_bias="0.038"
         android:visibility="gone"/>
 
     <Button
@@ -54,10 +54,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Resend verification email"
-        app:layout_constraintBottom_toTopOf="@+id/LoginEmail"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/need_verification_text"
+        app:layout_constraintTop_toBottomOf="@+id/forgotPassword"
+        app:layout_constraintVertical_bias="0.142"
         android:visibility="gone"/>
 
     <EditText
