@@ -25,7 +25,7 @@ Pace Marketplace is an application designed to connect university students who a
 
 # [Presentation](https://docs.google.com/presentation/d/1UMt5QJxqHIqT3IbhQTsod67JbiwVXkoH_r3MGIsB66Q/edit?usp=sharing)
 
-# [Project Write-up] (https://docs.google.com/document/d/1Wi2Uk3hSLj08tzl1imqljreO1BTNUgnQEytmDw-LF1k/edit?usp=sharing)
+# [Project Write-up](https://docs.google.com/document/d/1Wi2Uk3hSLj08tzl1imqljreO1BTNUgnQEytmDw-LF1k/edit?usp=sharing)
 
 # Install
 You can install and test the application using the apk file located [here](https://drive.google.com/file/d/1xVmNFduQ1EdBx1M_afXqa1fS9a-AxGeK/view?usp=sharing).
